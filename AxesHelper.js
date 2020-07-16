@@ -14,32 +14,114 @@
  * http://www.apache.org/licenses/LICENSE-2.0
 */
 
-//import ScaleController from '../../commonNodeJS/master/ScaleController.js';
-//import PositionController from '../../commonNodeJS/master/PositionController.js';
+//import { ScaleControllers } from '../../commonNodeJS/master/ScaleController.js';
+import ScaleController from '../../commonNodeJS/master/ScaleController.js';
+
+import PositionController from '../../commonNodeJS/master/PositionController.js';
+
 import Cookie from '../../cookieNodeJS/master/cookie.js';
 //import { THREE } from '../../three.js';
 import * as THREE from '../../three.js/dev/build/three.module.js';
+import { SpriteText, SpriteTextGui, updateSpriteTextGroup } from '../../SpriteText/master/SpriteText.js';
+import { dat } from '../../commonNodeJS/master/dat.module.js';
 
 /**
  * 
  * @param {any} group THREE group or scene
  * @param {object} [options] followed options is available
  * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.
- * @param {object} [options.scales] axes scales. Default is {}
- */
-export function AxesHelper( group, options ) {
+ * @param {number} [options.scales] axes scales. Default is {}
+ * 
+ * @param {number} [options.scales.axisName] x or y or z
+ * @param {number} [options.scales.axisName.zoomMultiplier] zoom multiplier. Default is 1.1
+ * @param {number} [options.scales.axisName.offset] position offset. Default is 0.1
+ * @param {string} [options.scales.axisName.name] axis name. Default is axisName.
+ * @param {number} [options.scales.axisName.min] Minimum range of the y axis. Default is -1.
+ * @param {number} [options.scales.axisName.max] Maximum range of the y axis. Default is 1.
+ * @param {number} [options.scales.axisName.marks] Number of y scale marks. Default is undefined no marks.
+*
+ * @param {object} [options.scaales.text] followed options of the text of the marks is available
+ * @param {boolean} [options.scales.text.precision] Formats a scale marks into a specified length. Default is 4
+ * @param {number} [options.scales.text.textHeight] The height of the text. Default is 0.1.
+ * @param {object} [options.scales.text.rect] rectangle around the text.
+ * @param {boolean} [options.scales.text.rect.displayRect] true - the rectangle around the text is visible. Default is true.
+ * @param {Cookie} [options.cookie] Your custom cookie function for saving and loading of the AxesHelper settings. Default cookie is not saving settings.
+ * @param {string} [options.cookieName] Name of the cookie is "AxesHelper" + options.cookieName. Default is undefined.
+ * @param {THREE.PerspectiveCamera} [options.camera] camera.
+ * Set the camera if you want to see text size is independent from camera.fov. The text height will be calculated as textHeight = camera.fov * textHeight / 50
+ * See https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera.fov about camera.fov.
+ * Default is undefined. Default camera.fov is 50.
+*/
+export function AxesHelper( group, options/*, camera*/ ) {
 
 	options = options || {};
 	options.color = options.color || 'white';//0xffffff;
-	options.camera = options.camera || {
 
-		position: new THREE.Vector3( 0.4, 0.4, 2 ),
-		fov: 70,
+	//Создаю новый объект camera что бы не засорять cookie лишней информацией
+	options.camera = {
+
+//		position: new THREE.Vector3( 0.4, 0.4, 2 ),
+		fov: options.camera !== undefined ? options.camera.fov : 50,
 
 	};
+
+	options.scales = options.scales || {};
+	options.scales.display = options.scales.display !== undefined ? options.scales.display : false;
+	options.scales.text = options.scales.text || {};
+//	options.scales.text.precision = options.scales.text.precision || 4;
+//	options.scales.text.textHeight = options.scales.text.textHeight || 0.1;
+	options.scales.text.rect = options.scales.text.rect || {};
+	options.scales.text.rect.displayRect = options.scales.text.rect.displayRect !== undefined ? options.scales.text.rect.displayRect : true;
+	options.scales.text.rect.borderRadius = options.scales.text.rect.borderRadius !== undefined ? options.scales.text.rect.borderRadius : 15;
+	function scaleOptions( axisName ) {
+
+		const scale = options.scales[axisName];
+		if ( !scale )
+			return;
+		if ( scale.min === undefined ) scale.min = - 1;
+		if ( scale.max === undefined ) scale.max = 1;
+		if ( scale.offset === undefined ) scale.offset = 0.1;
+		if ( scale.zoomMultiplier === undefined ) scale.zoomMultiplier = 1.1;
+
+	}
+	scaleOptions('x');
+	scaleOptions('y');
+	scaleOptions('z');
+
+	//cookie
+	const cookie = options.cookie || new Cookie.defaultCookie();
+	const cookieName = 'AxesHelper' + ( options.cookieName ? '_' + options.cookieName : '' );
+	const optionsDefault = JSON.parse( JSON.stringify( options ) );
+	Object.freeze( optionsDefault );
+	cookie.getObject( cookieName, options, optionsDefault );
+	
+	//если количество осей изменилось а в cookie осталось прежнее количество осей,
+	//то надо восстановить количество осей после загрузки из cookie
+	function restoreAxis( axisName ) {
+
+		if ( ( options.scales[axisName] === undefined ) && ( optionsDefault.scales[axisName] !== undefined ) )
+			options.scales[axisName] = JSON.parse( JSON.stringify( optionsDefault.scales[axisName] ) );//В будкщем значение options.scales будет меняться. Поэтому копирую. Пока что не проверял
+		else if ( optionsDefault.scales[axisName] === undefined )
+			options.scales[axisName] = undefined;
+
+	}
+	restoreAxis( 'x' );
+	restoreAxis( 'y' );
+	restoreAxis( 'z' );
+	options.camera.fov = optionsDefault.camera.fov;
+
 	this.options = options;
 
-	let groupAxesHelper = new THREE.Group();
+	const groupAxesHelper = new THREE.Group();
+	groupAxesHelper.userData.optionsSpriteText = {
+
+		fontColor: options.color,
+		//textHeight: options.scales.text.textHeight,
+//		fov: options.scales.text.fov,
+		fov: options.camera.fov,
+		rect: options.scales.text.rect,
+
+	}
 /*
 	let axesGroups = new THREE.Vector3(
 
@@ -50,69 +132,33 @@ export function AxesHelper( group, options ) {
 	);
 */
 
-	//For moving of the axes intersection to the center of the canvas ( to the camera focus ) 
-	let posAxesIntersection = new THREE.Vector3().copy( group.position ).divide( group.scale );
+	const posAxesIntersection = new THREE.Vector3().copy( group.position ).divide( group.scale );//For moving of the axes intersection to the center of the canvas ( to the camera focus ) 
+//		axesGroups = {};
 
 	function createAxis( axisName ) {
 
-/*
-		let group = axesGroups[axisName];
-		if ( !group )
-			return;
-*/
-		let scale = options.scales[axisName];
+		const group = new THREE.Group();
+//		groupAxesHelper.add( group );
+		group.visible = options.scales.display;
+		
+		const scale = options.scales[axisName];
 		if ( !scale )
 			return;
+/*			
 		if ( scale.min === undefined ) scale.min = - 1;
 		if ( scale.max === undefined ) scale.max = 1;
-/*
-		let groupAxis = new THREE.Group();
-		groupAxis.add( new THREE.Line( new THREE.BufferGeometry().setFromPoints( [
+*/		
 
-			//Begin vertice of the axis
-			new THREE.Vector3(
+		var color = options.color, opacity = 1;
+		try {
 
-				//X
-				axisName !== 'x' ? axisName !== 'y' ? - posAxesIntersection.x//shift the Z axis to right or left
-					: - posAxesIntersection.x//shift the Y axis to right or left
-					: !options.scales.x ? 0//X axis is not exists
-					: options.scales.x.min,//begin of the X axix
-				//Y
-				axisName !== 'y' ? axisName !== 'x' ? - posAxesIntersection.y//shift the Z axis to up or down
-					: - posAxesIntersection.y//shift the X axis to up or down
-					: !options.scales.y ? 0//Y axis is not exists
-					: options.scales.y.min,//begin of the Y axix
-				//Z
-				axisName !== 'z' ? axisName !== 'y' ? - posAxesIntersection.z//shift the X axis to near or far of the camera.
-					: - posAxesIntersection.z
-					: !options.scales.z ? 0//Z axis is not exists
-					: options.scales.z.min,//begin of the Z axix
-				
-			),
-			//end vertice of the axis
-			new THREE.Vector3(
+			var array = options.color.split( /rgba\(\.*/ )[1].split( /\)/ )[0].split( /, */ );
+			color = 'rgb(' + array[0] + ', ' + array[1] + ', ' + array[2] + ')';
+			if ( array[3] !== undefined )
+				opacity = array[3];
 
-				//X
-				axisName !== 'x' ? axisName !== 'y' ? - posAxesIntersection.x//shift the Z axis to right or left
-					: - posAxesIntersection.x//shift the Y axis to right or left
-					: !options.scales.x ? 0//X axis is not exists
-					: options.scales.x.max,//end of the X axix
-				//Y
-				axisName !== 'y' ? axisName !== 'x' ? - posAxesIntersection.y//shift the Z axis to up or down
-					: - posAxesIntersection.y//shift the X axis to up or down
-					: !options.scales.y ? 0//Y axis is not exists
-					: options.scales.y.max,//end of the Y axix
-				//Z
-				axisName !== 'z' ? axisName !== 'y' ? - posAxesIntersection.z//shift the X axis to near or far of the camera.
-					: - posAxesIntersection.z
-					: !options.scales.z ? 0//Z axis is not exists
-					: options.scales.z.max,//end of the Z axix
-				
-			),
-		] ), new THREE.LineBasicMaterial( { color: options.color } ) ) );
-		groupAxesHelper.add( groupAxis );
-*/
-		let lineAxis = new THREE.Line( new THREE.BufferGeometry().setFromPoints( [
+		} catch ( e ) {}
+		const lineAxis = new THREE.Line( new THREE.BufferGeometry().setFromPoints( [
 
 			//Begin vertice of the axis
 			new THREE.Vector3(
@@ -148,71 +194,193 @@ export function AxesHelper( group, options ) {
 						: options.scales.z.max,//end of the Z axix
 
 			),
-		] ), new THREE.LineBasicMaterial( { color: options.color } ) );
-
+		] ), new THREE.LineBasicMaterial( { color: color, opacity: opacity, transparent: true, } ) );
 		//moving of the axes intersection to the center of the canvas ( to the camera focus )
 		if ( axisName !== 'x' ) lineAxis.position.x = - posAxesIntersection.x;
 		if ( axisName !== 'y' ) lineAxis.position.y = - posAxesIntersection.y;
 		if ( axisName !== 'z' ) lineAxis.position.z = - posAxesIntersection.z;
-
-		if ( scale.marks !== undefined ){
-
-			//Thanks to https://stackoverflow.com/a/27369985/5175935
-			//Такая же функция есть в frustumPoints.js но если ее использовать то она будет возвращать путь на frustumPoints.js
-			var getCurrentScript = function () {
-
-				if ( document.currentScript && ( document.currentScript.src !== '' ) )
-					return document.currentScript.src;
-				var scripts = document.getElementsByTagName( 'script' ),
-					str = scripts[scripts.length - 1].src;
-				if ( str !== '' )
-					return src;
-				//Thanks to https://stackoverflow.com/a/42594856/5175935
-				return new Error().stack.match( /(https?:[^:]*)/ )[0];
-
-			};
-			//Thanks to https://stackoverflow.com/a/27369985/5175935
-			var getCurrentScriptPath = function () {
-				var script = getCurrentScript(),
-					path = script.substring( 0, script.lastIndexOf( '/' ) );
-				return path;
-			};
-			var currentScriptPath = getCurrentScriptPath();
-			function onError( event ) { console.error( 'Load ' + event.target.responseURL +
-				'. status: ' + event.target.status +
-				'. statusText: ' + event.target.statusText ); }
-
-			//load vertex.c file
-			let vertex_loader = new THREE.FileLoader( THREE.DefaultLoadingManager ),
-				vertex_url = currentScriptPath + '/vertex.c';
-			vertex_loader.setResponseType( 'text' );
-			vertex_loader.load( vertex_url, function ( vertex_text ) {
-
-//				console.log( 'vertex_url: ' + vertex_url + '\r\n' + vertex_text );
-				let fragment_url = currentScriptPath + '/fragment.c';
-
-				//load fragment.c file
-				var fragment_loader = new THREE.FileLoader( THREE.DefaultLoadingManager );
-				fragment_loader.setResponseType( 'text' );
-				fragment_loader.load( fragment_url, function ( fragment_text ) {
-
-//					console.log( '\r\nfragment_url: ' + fragment_url + '\r\n' + fragment_text );
-let mid = ( scale.max + scale.min ) / 2, a = axisName !== 'x' ? 0.5 : 1, b = axisName !== 'x' ? 1 : 0.5;
-					lineAxis.add( new THREE.Line( new THREE.BufferGeometry().setFromPoints( [
-
-						//Begin
-new THREE.Vector3( mid, 0, 0 ),
-						//end
-new THREE.Vector3( mid, a, b ),
-
-					] ), new THREE.LineBasicMaterial( { color: axisName !== 'x' ? 'green' : 'red' } ) ) );
-
-				}, undefined, onError );
-
-			}, undefined, onError );
-			
-		}
+		lineAxis.add( group );
+		lineAxis.userData.axisName = axisName;
 		groupAxesHelper.add( lineAxis );
+
+//		if ( ( scale.marks !== undefined ) && options.scales.display )
+		if ( scale.marks !== undefined )
+		{
+
+			const SpriteMark = function (
+				position,
+//				options
+			) {
+
+				position = position || new THREE.Vector3( 0, 0, 0 );
+				//console.warn( 'axisName: ' + axisName + ' position = ' + position.x + ', ' + position.y + ', ' + position.z );
+//				options = options || {};
+				const sizeAttenuation = false;
+
+
+				const sprite = new THREE.Sprite( new THREE.SpriteMaterial( {
+
+					map: new THREE.Texture(),
+					sizeAttenuation: sizeAttenuation,
+
+				} ) );
+				const canvas = document.createElement( 'canvas' );
+				sprite.material.map.minFilter = THREE.LinearFilter;
+				const context = canvas.getContext( '2d' );
+
+				function update() {
+
+					const center = new THREE.Vector2(
+
+						//x
+						axisName !== 'y' ? 0.5 ://For x and z axes риска не сдвигается
+							0,//For y axes риска сдвигается вправо
+
+						//y
+						axisName === 'y' ? 0.5 ://For y axes риска не сдвигается
+							1//For x and z axes риска сдвигается вниз
+
+					);
+					var width = 3;//, linesCount = 1,
+					context.fillStyle = options.color;//'rgba(0, 255, 0, 1)';
+					context.fillRect(0, 0, canvas.width, canvas.height);
+
+					// Inject canvas into sprite
+					sprite.material.map.image = canvas;
+					sprite.material.map.needsUpdate = true;
+
+					if ( axisName === 'y' ) {
+
+						sprite.scale.x = ( width * ( canvas.width / canvas.height ) ) / canvas.width ;
+						sprite.scale.y = 1 / canvas.height;
+
+					} else {
+
+						sprite.scale.x = 1 / canvas.width;
+						sprite.scale.y = width / canvas.height;
+
+					}
+/*					
+sprite.scale.x /= 2;
+sprite.scale.y /= 2;
+*/
+					sprite.scale.x *= options.camera.fov / ( 50 * 2 );
+					sprite.scale.y *= options.camera.fov / ( 50 * 2 );
+					
+					sprite.position.copy( position );
+					sprite.center = center;
+
+					//size attenuation. Whether the size of the sprite is attenuated by the camera depth. (Perspective camera only.) Default is false.
+					//See https://threejs.org/docs/index.html#api/en/materials/SpriteMaterial.sizeAttenuation
+					sprite.material.sizeAttenuation = sizeAttenuation;
+
+//					sprite.material.rotation = rotation;
+					sprite.material.needsUpdate = true;
+
+					function getTextPrecision() {
+
+						return options.scales.text.precision !== undefined ? text.toPrecision( options.scales.text.precision ) : text.toString();
+
+					}
+					var text = ( axisName === 'x' ? position.x : axisName === 'y' ? position.y : position.z );
+					function getCenterX() {
+
+						const a = ( 0.013 - 0.05 ) /15, b = 0.013 - 17 * a;
+//						const a = ( 0.013 - 0.1 ) /16, b = 0.013 - 17 * a;
+						return - width * ( getTextPrecision().length * a + b );
+
+					}
+					const spriteText = new SpriteText(
+						getTextPrecision(),
+						new THREE.Vector3(
+							position.x,// + ( axisName === 'y' ? width / canvas.width : 0 ),
+							position.y,
+							position.z,
+						), {
+
+						group: group,
+						rotation: axisName === 'y' ? 0 : - Math.PI / 2,
+						center: new THREE.Vector2(
+
+//							-0.1,//текст по оси y сдвигается вправо
+//							 - width * 0.05,//текст по оси y сдвигается вправо
+//							 - width * 0.013,//текст по оси y сдвигается вправо
+//							 - width * ( textPrecision.length * a + b ),//текст по оси y сдвигается вправо
+							 getCenterX(),//текст по оси y сдвигается вправо
+							//текст по оси x и z сдвигается вниз
+
+							axisName === 'x' ? 1 ://текст по оси x сдвигается влево
+								0,//текст по оси z сдвигается вправо,
+							//текст по оси y сдвигается вверх
+
+						),
+						/*
+												fontColor: options.color,
+												textHeight: options.scales.text.textHeight,
+												fov: options.scales.text.fov,
+												rect: options.scales.text.rect,
+						*/
+
+					} );
+					spriteText.userData.updatePrecision = function () {
+
+						spriteText.userData.updateText( text.toPrecision( options.scales.text.precision ) );
+//						spriteText.center.x = - width * ( options.scales.text.precision * a + b );
+						spriteText.center.x = getCenterX();
+
+					}
+					group.add( spriteText );
+
+				};
+				update();
+				return sprite;
+
+			};
+			const d = ( scale.max - scale.min ) / ( scale.marks - 1 );
+			for ( var i = 0; i < scale.marks; i++ ) {
+
+				const pos = i * d + scale.min;
+				group.add( new SpriteMark( new THREE.Vector3(
+					axisName === 'x' ? pos : 0,
+					axisName === 'y' ? pos : 0,
+					axisName === 'z' ? pos : 0,
+				) ) );
+
+			}
+		}
+
+		//Axis name
+		var axisNameOptions = {
+
+/*
+			fontColor: options.color,
+//						rotation: axisName === 'y' ? 0 : - Math.PI / 2,
+			textHeight: options.scales.text.textHeight,
+			rect: options.scales.text.rect,
+*/
+			center: new THREE.Vector2(
+				axisName === 'y' ? 1.1 : -0.1,
+				axisName === 'y' ? 0 : -0.1
+			),
+			group: group,
+
+		}
+		scale.name = scale.name || axisName;
+		group.add( new SpriteText(
+			scale.name,
+			new THREE.Vector3(
+				axisName === 'x' ? scale.max : 0,
+				axisName === 'y' ? scale.max : 0,
+				axisName === 'z' ? scale.max : 0,
+			), axisNameOptions ) );
+		group.add( new SpriteText(
+			scale.name,
+			new THREE.Vector3(
+				axisName === 'x' ? scale.min : 0,
+				axisName === 'y' ? scale.min : 0,
+				axisName === 'z' ? scale.min : 0,
+			), axisNameOptions ) );
+//		axesGroups[axisName] = group;
 
 	}
 	createAxis( 'x' );
@@ -220,6 +388,7 @@ new THREE.Vector3( mid, a, b ),
 	createAxis( 'z' );
 	group.add( groupAxesHelper );
 
+//	updateSpriteTextGroup( groupAxesHelper );
 	/**
 	* Expose position on axes.
 	* @param {THREE.Vector3} pointVertice position
@@ -237,42 +406,71 @@ console.warn( 'AxesHelper.exposePosition: Under constraction' );
 
 	this.gui = function ( gui, guiParams ) {
 
-console.warn( 'AxesHelper.gui: Under constraction' );
+//		const axesHelper = this;
 		guiParams = guiParams || {};
-
-		//cookie
-		let cookie = options.cookie || new Cookie.defaultCookie();
-		const cookieName = 'AxesHelper' + ( options.cookieName ? '_' + options.cookieName : '' );
-		const optionsDefault = JSON.parse( JSON.stringify( options ) );
-		Object.freeze( optionsDefault );
-		cookie.getObject( cookieName, options, optionsDefault );
 
 		//Localization
 
-		var lang = {
-/*
-			moveGroup: 'Move Group',
-			scale: 'Scale',
-			position: 'Position',
+		const lang = {
+
+			axesHelper: 'Axes Helper',
+
+			scales: 'Scales',
+
+			displayScales: 'Display',
+			displayScalesTitle: 'Display or hide axes scales.',
+
+			precision: 'Precision',
+			precisionTitle: 'Formats a number to a specified length.',
+
+			min: 'Min',
+			max: 'Max',
+			
+			marks: 'Marks',
+			marksTitle: 'Number of scale marks',
 
 			defaultButton: 'Default',
-			defaultTitle: 'Move axis to default position.',
+			defaultTitle: 'Restore default Axes Helper settings.',
+/*
+			//Zoom
+			zoom: 'Zoom',
+			in: 'in',
+			out: 'out',
+			wheelZoom: 'Scroll the mouse wheel to zoom',
 */
 
 		};
 
-		var languageCode = guiParams.getLanguageCode === undefined ? 'en'//Default language is English
+		const languageCode = guiParams.getLanguageCode === undefined ? 'en'//Default language is English
 			: guiParams.getLanguageCode();
 		switch ( languageCode ) {
 
 			case 'ru'://Russian language
-/*
-				lang.moveGroup = 'Переместить группу'; scale
-				lang.scale = 'Масштаб';
-				lang.position = 'Позиция';
+
+				lang.axesHelper = 'Оси координат'; //'Axes Helper'
+
+				lang.scales = 'Шкалы';//'Scales',
+
+				lang.displayScales = 'Показать';
+				lang.displayScalesTitle = 'Показать или скрыть шкалы осей координат.';
+
+				lang.precision = 'Точность';
+				lang.precisionTitle = 'Ограничить количество цифр в числе.';
+
+				lang.min = 'Минимум';
+				lang.max = 'Максимум';
+				
+				lang.marks = 'Риски';
+				lang.marksTitle = 'Количество отметок на шкале';
 
 				lang.defaultButton = 'Восстановить';
-				lang.defaultTitle = 'Переместить ось а исходное состояние.';
+				lang.defaultTitle = 'Восстановить настройки осей координат по умолчанию.';
+/*
+				//Zoom
+				lang.zoom = 'Масштаб';
+				lang.in = 'увеличить';
+				lang.out = 'уменьшить';
+				lang.wheelZoom = 'Прокрутите колесико мыши для изменения масштаба';
 */
 
 				break;
@@ -289,6 +487,370 @@ console.warn( 'AxesHelper.gui: Under constraction' );
 				} );
 
 		}
+
+		function setSettings() { cookie.setObject( cookieName, options ); }
+
+		//AxesHelper folder
+		const fAxesHelper = gui.addFolder( lang.axesHelper );
+
+		//scales folder
+		const fScales = fAxesHelper.addFolder( lang.scales );
+
+		//display scales
+
+		const controllerDisplayScales = fScales.add( options.scales, 'display' ).onChange( function ( value ) {
+
+			groupAxesHelper.children.forEach( function ( group ) {
+
+				group.children.forEach( function ( group ) {
+
+					group.visible = value;
+
+				} );
+
+			} );
+/*			
+			Object.keys( axesGroups ).forEach( function ( key ) {
+
+				axesGroups[key].visible = value;
+
+			} );
+*/			
+			displayControllers();
+			setSettings();
+			
+
+		} );
+		dat.controllerNameAndTitle( controllerDisplayScales, lang.displayScales, lang.displayScalesTitle );
+
+		var controllerPrecision;
+		if ( options.scales.text.precision !== undefined ) {
+
+			controllerPrecision = fScales.add( options.scales.text, 'precision', 2, 17, 1 ).onChange( function ( value ) {
+
+				function updateSpriteTextGroup( group ) {
+
+					group.children.forEach( function ( spriteItem ) {
+
+						if ( spriteItem instanceof THREE.Sprite ) {
+
+							if ( spriteItem.userData.updatePrecision !== undefined )
+								spriteItem.userData.updatePrecision();
+
+						} else if ( ( spriteItem instanceof THREE.Group ) || ( spriteItem instanceof THREE.Line ) )
+							updateSpriteTextGroup( spriteItem );
+
+					} );
+
+				}
+				updateSpriteTextGroup( groupAxesHelper );
+				setSettings();
+
+			} )
+			dat.controllerNameAndTitle( controllerPrecision, lang.precision, lang.precisionTitle );
+
+		}
+
+		const fSpriteText = SpriteTextGui( gui, groupAxesHelper, {
+
+			getLanguageCode: guiParams.getLanguageCode,
+			//settings: { zoomMultiplier: 1.5, },
+			cookie: cookie,
+			cookieName: 'SpriteText_' + cookieName,
+			parentFolder: fScales,
+//			options: groupAxesHelper.userData.optionsSpriteText,
+
+		} );
+
+		fAxesHelper.add( new ScaleController(
+			function ( customController, action ) {
+
+				function zoom( zoom, action ) {
+
+					var axesHelper = guiParams.axesHelper;
+
+					function axesZoom( axes, scaleControllers, windowRange ) {
+
+						if ( axes === undefined )
+							return;//not 3D axesHelper
+
+						axes.min = action( axes.min, zoom );
+						scaleControllers.min.setValue( axes.min );
+
+						axes.max = action( axes.max, zoom );
+						scaleControllers.max.setValue( axes.max );
+						scaleControllers.onchangeWindowRange( windowRange, axes );
+
+					}
+
+					axesZoom( options.scales.x, scalesControllers.x, axesHelper === undefined ? undefined : axesHelper.windowRangeX );
+					axesZoom( options.scales.y, scalesControllers.y, axesHelper === undefined ? undefined : axesHelper.windowRangeY );
+					axesZoom( options.scales.z, scalesControllers.z, axesHelper === undefined ? undefined : axesHelper.windowRangeZ );
+
+					if ( axesHelper !== undefined )
+						axesHelper.updateDotLines();
+
+				}
+				zoom( customController.controller.getValue(), action );
+
+			}, {
+
+			settings: { zoomMultiplier: 1.1, },
+			getLanguageCode: guiParams.getLanguageCode,
+
+		} ) ).onChange( function ( value ) {
+
+			console.warn( 'ScaleController.onChange' );
+
+		} );
+
+		function scale( axisName/*, axes, windowRange, scaleControllers, axesDefault*/ ) {
+
+			const axes = options.scales[axisName];
+			if ( axes === undefined )
+				return;
+
+			const scaleControllers = scalesControllers[axisName],
+				axesDefault = optionsDefault.scales[axisName];
+
+			Object.freeze( axesDefault );
+
+			function onchangeWindowRange( windowRange, scale ) {
+
+				groupAxesHelper.children.forEach( function ( group ) {
+
+					if ( group.userData.axisName !== axisName )
+						return;
+					groupAxesHelper.remove( group );
+					createAxis( axisName );
+//					groupAxesHelper.needsUpdate = true;
+
+/*
+					group.children.forEach( function ( group ) {
+
+						group.visible = value;
+
+					} );
+*/					
+
+				} );
+				setSettings();
+/*				
+				while( groupAxesHelper.children.length > 0 )
+					groupAxesHelper.remove( groupAxesHelper.children[0] );
+*/					
+	/*
+				if ( options.scene !== undefined ) {
+
+					var scene = options.scene, scales = options.scales;
+
+					scene.scale.x = 2 / Math.abs( scales.x.min - scales.x.max );
+					if ( scales.y !== undefined )
+						scene.scale.y = 2 / Math.abs( scales.y.min - scales.y.max );
+					if ( scales.z !== undefined )
+						scene.scale.z = 2 / Math.abs( scales.z.min - scales.z.max );
+
+					scene.position.x = - ( scales.x.min + scales.x.max ) / 2;
+					if ( scales.y !== undefined )
+						scene.position.y = - ( scales.y.min + scales.y.max ) / 2;
+					if ( scales.z !== undefined )
+						scene.position.z = - ( scales.z.min + scales.z.max ) / 2;
+					scene.position.multiply( scene.scale );
+
+				}
+				if ( guiParams.axesHelper !== undefined )
+					guiParams.axesHelper.onchangeWindowRange();
+				if ( windowRange !== undefined )
+					windowRange( scale );
+				if ( guiParams.guiSelectPoint !== undefined )
+					guiParams.guiSelectPoint.windowRange( options );
+	*/				
+
+			}
+			scaleControllers.onchangeWindowRange = onchangeWindowRange;
+		
+			function onclick( customController, action ) {
+
+				var zoom = customController.controller.getValue();
+
+				axes.min = action( axes.min, zoom );
+				scaleControllers.min.setValue( axes.min );
+
+				axes.max = action( axes.max, zoom );
+				scaleControllers.max.setValue( axes.max );
+
+				onchangeWindowRange( windowRange, axes );
+
+				if ( guiParams.axesHelper !== undefined )
+					guiParams.axesHelper.updateDotLines();
+
+			}
+
+			scaleControllers.folder = fAxesHelper.addFolder( axes.name );
+
+			scaleControllers.scaleController = scaleControllers.folder.add( new ScaleController( onclick,
+				{ settings: axes, getLanguageCode: guiParams.getLanguageCode, } ) ).onChange( function ( value ) {
+
+					axes.zoomMultiplier = value;
+					setSettings();
+
+				} );
+
+			var positionController = new PositionController( function ( shift ) {
+
+				onclick( positionController, function ( value, zoom ) {
+
+					value += shift;//zoom;
+					return value;
+
+				} );
+
+			}, { settings: axes, getLanguageCode: guiParams.getLanguageCode, } );
+			scaleControllers.positionController = scaleControllers.folder.add( positionController ).onChange( function ( value ) {
+
+				axes.offset = value;
+				setSettings();
+
+			} );
+
+			//min
+			scaleControllers.min = dat.controllerZeroStep( scaleControllers.folder, axes, 'min', function ( value ) {
+
+				onchangeWindowRange( windowRange );
+
+			} );
+			dat.controllerNameAndTitle( scaleControllers.min, lang.min );
+
+			//max
+			scaleControllers.max = dat.controllerZeroStep( scaleControllers.folder, axes, 'max', function ( value ) {
+
+				onchangeWindowRange( windowRange );
+
+			} );
+			dat.controllerNameAndTitle( scaleControllers.max, lang.max );
+
+			//marks
+			if ( axes.marks !== undefined ) {//w axis do not have marks
+
+				scaleControllers.marks = dat.controllerZeroStep( scaleControllers.folder, axes, 'marks', function ( value ) {
+
+//					windowRange();
+					onchangeWindowRange( windowRange );
+
+				} );
+				dat.controllerNameAndTitle( scaleControllers.marks, axes.marksName === undefined ? lang.marks : axes.marksName,
+					axes.marksTitle === undefined ? lang.marksTitle : axes.marksTitle );
+
+			}
+
+			//Default button
+			scaleControllers.defaultButton = scaleControllers.folder.add( {
+
+				defaultF: function ( value ) {
+
+					axes.min = axesDefault.min;
+					scaleControllers.min.setValue( axes.min );
+
+					axes.max = axesDefault.max;
+					scaleControllers.max.setValue( axes.max );
+
+					axes.zoomMultiplier = axesDefault.zoomMultiplier;
+					scaleControllers.scaleController.setValue( axes.zoomMultiplier );
+
+					axes.offset = axesDefault.offset;
+					scaleControllers.positionController.setValue( axes.offset );
+
+					if ( axesDefault.marks !== undefined ) {
+
+						axes.marks = axesDefault.marks;
+						scaleControllers.marks.setValue( axes.marks );
+
+					}
+
+					onchangeWindowRange( windowRange, axes );
+
+					if ( guiParams.axesHelper !== undefined )
+						guiParams.axesHelper.updateDotLines();
+
+				},
+
+			}, 'defaultF' );
+			dat.controllerNameAndTitle(scaleControllers.defaultButton , lang.defaultButton, lang.defaultTitle );
+
+		}
+		const scalesControllers = { x: {}, y: {}, z: {} };//, w: {} };//, t: {}, };
+		function windowRange() {
+
+//			cookie.setObject( cookieName, options.scales );
+			setSettings();
+
+		}
+/*		
+		function s( axisName ) {
+
+			if ( options.scales[axisName] !== undefined )	
+				scale( axisName, options.scales[axisName], windowRange, scalesControllers[axisName], optionsDefault.scales[axisName] );
+			
+		}
+		s('x');
+		s('y');
+		s('z');
+		s('w');
+*/		
+		scale('x');
+		scale('y');
+		scale('z');
+		scale('w');
+/*		
+		scale( options.scales.x,
+			guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeX,
+			scalesControllers.x, optionsDefault.scales.x );
+		scale( options.scales.y,
+			guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeY,
+			scalesControllers.y, optionsDefault.scales.y );
+		scale( options.scales.z,
+			guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeZ,
+			scalesControllers.z, optionsDefault.scales.z );
+		if ( options.scales.w !== undefined ) {
+			scale( options.scales.w, windowRange, scalesControllers.w, optionsDefault.scales.w );
+		}
+*/		
+
+
+		//default button
+		var defaultParams = {
+
+			defaultF: function ( value ) {
+
+				controllerDisplayScales.setValue( optionsDefault.scales.display );
+				if ( controllerPrecision !== undefined )
+					controllerPrecision.setValue( optionsDefault.scales.text.precision );
+				fSpriteText.userData.restore();
+				function defaulAxis( axisName ) {
+
+					if ( scalesControllers[axisName].defaultButton )
+						scalesControllers[axisName].defaultButton.object.defaultF();
+
+				}
+				defaulAxis( 'x' );
+				defaulAxis( 'y' );
+				defaulAxis( 'z' );
+
+			},
+
+		};
+		dat.controllerNameAndTitle( fAxesHelper.add( defaultParams, 'defaultF' ), lang.defaultButton, lang.defaultTitle );
+		
+		function displayControllers() {
+
+			var display = options.scales.display ? 'block' : 'none';
+//			if ( fSpriteText !== undefined )
+			fSpriteText.domElement.style.display = display;
+			if ( controllerPrecision !== undefined )	
+				controllerPrecision.domElement.parentElement.parentElement.style.display = display;
+
+		}
+		displayControllers();
 
 	}
 
