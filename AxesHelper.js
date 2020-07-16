@@ -14,10 +14,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0
 */
 
-//import { ScaleControllers } from '../../commonNodeJS/master/ScaleController.js';
-import ScaleController from '../../commonNodeJS/master/ScaleController.js';
+//import { ScaleControllers } from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
+import ScaleController from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
 
-import PositionController from '../../commonNodeJS/master/PositionController.js';
+import PositionController from '../../commonNodeJS/master/PositionController.js';//https://github.com/anhr/commonNodeJS
 
 import Cookie from '../../cookieNodeJS/master/cookie.js';
 //import { THREE } from '../../three.js';
