@@ -15,15 +15,26 @@
 */
 
 //import { ScaleControllers } from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
+
 import ScaleController from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
+//import ScaleController from 'https://raw.githack.com/anhr/commonNodeJS/master/ScaleController.js';
 
 import PositionController from '../../commonNodeJS/master/PositionController.js';//https://github.com/anhr/commonNodeJS
+//import PositionController from 'https://raw.githack.com/anhr/commonNodeJS/master/PositionController.js';
 
-import Cookie from '../../cookieNodeJS/master/cookie.js';
+import Cookie from '../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
+//import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+
 //import { THREE } from '../../three.js';
-import * as THREE from '../../three.js/dev/build/three.module.js';
-import { SpriteText, SpriteTextGui, updateSpriteTextGroup } from '../../SpriteText/master/SpriteText.js';
-import { dat } from '../../commonNodeJS/master/dat/dat.module.js';
+//import * as THREE from '../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js;
+import { THREE } from '../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
+//import * as THREE from 'https://raw.githack.com/anhr/three.js/dev/build/three.module.js';
+
+import { SpriteText, SpriteTextGui } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+//import { SpriteText, SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+
+import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
+//import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
 /**
  * 
