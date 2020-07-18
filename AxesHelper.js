@@ -1,9 +1,9 @@
 /**
- * AxesHelper
- *
+ * @module AxesHelper
+ * 
  * An axis object to visualize the 1, 2 or 3 axes.
  *
- * @author Andrej Hristoliubov https://anhr.github.io/AboutMe/
+ * @author {@link https://anhr.github.io/AboutMe/|Andrej Hristoliubov}
  *
  * @copyright 2011 Data Arts Team, Google Creative Lab
  *
@@ -23,7 +23,7 @@ import Cookie from '../../cookieNodeJS/master/cookie.js';
 //import { THREE } from '../../three.js';
 import * as THREE from '../../three.js/dev/build/three.module.js';
 import { SpriteText, SpriteTextGui, updateSpriteTextGroup } from '../../SpriteText/master/SpriteText.js';
-import { dat } from '../../commonNodeJS/master/dat.module.js';
+import { dat } from '../../commonNodeJS/master/dat/dat.module.js';
 
 /**
  * 
