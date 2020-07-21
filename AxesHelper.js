@@ -36,6 +36,9 @@ import { SpriteText, SpriteTextGui } from '../../SpriteText/master/SpriteText.js
 import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 //import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
+import clearThree from '../../commonNodeJS/master/clearThree.js';//https://github.com/anhr/commonNodeJS
+//import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
+
 /**
  * 
  * @param {any} group THREE group or scene
@@ -400,18 +403,245 @@ sprite.scale.y /= 2;
 	group.add( groupAxesHelper );
 
 //	updateSpriteTextGroup( groupAxesHelper );
+
+	//dotted lines
+	function dotLines( _scene ) {
+
+		var lineX, lineY, lineZ, scene = _scene;
+		var groupDotLines;
+		this.remove = function () {
+
+			if ( groupDotLines === undefined )
+				return;
+
+			//clear memory
+			//
+			//Если это не делать, то со временем может произойти событие webglcontextlost
+			//https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/webglcontextlost_event
+			//
+			//for testing
+			//	open http://localhost/threejs/nodejs/controllerPlay/Examples/html/ page
+			//	select a point
+			//	open dat.gui
+			//	in the PlayController:
+			//		click the ⥀ button
+			//		Rate of changing of animation scenes per second to 25
+			//		click the ► play button
+			//	Now you can see animation of the scene
+			//	In the Windows open Resource Monitor
+			//		Open the Memory tab
+			//		The Commit(KB) for chrome.exe do not increasing about 20 minutes.
+			clearThree( groupDotLines );
+
+			scene.remove( groupDotLines );
+			groupDotLines = undefined;
+			lineX = undefined;
+			lineY = undefined;
+			lineZ = undefined;
+
+		};
+		function createGroup() {
+
+			dotLines.remove();
+			groupDotLines = new THREE.Group();
+			scene.add( groupDotLines );
+
+		}
+		function verticeAxis( position, scale ) { return - position / scale; }
+		function getDashSize() {
+
+			return 0.05 / ( Math.max( Math.max( group.scale.x, group.scale.y ), group.scale.z ) );
+
+		}
+		this.dottedLines = function ( pointVertice ) {
+
+/*
+			if ( axesHelper === undefined )
+				return;
+*/
+			if ( groupDotLines !== undefined ) {
+
+				function dottedLine( axisName/*axesId*/ ) {
+
+					var line;
+/*					
+					switch ( axesId ) {
+
+						case axesHelper.axesEnum.x:
+							line = lineX;
+							break;
+						case axesHelper.axesEnum.y:
+							line = lineY;
+							break;
+						case axesHelper.axesEnum.z:
+							line = lineZ;
+							break;
+						default: console.error( 'AxesHelper.dotLines.dottedLines.dottedLine: axesId = ' + axesId );
+							return;
+
+					}
+					var lineVertices = line.geometry.attributes.position.array;
+					lineVertices[0] = axesId === axesHelper.axesEnum.x ? pointVertice.x :
+						verticeAxis( options.scene.position.x, options.scene.scale.x );
+					lineVertices[1] = axesId === axesHelper.axesEnum.y ? pointVertice.y :
+						verticeAxis( options.scene.position.y, options.scene.scale.y );
+					lineVertices[2] = axesId === axesHelper.axesEnum.z ? pointVertice.z :
+						verticeAxis( options.scene.position.z, options.scene.scale.z );
+*/						
+					switch ( axisName ) {
+
+						case 'x':
+							line = lineX;
+							break;
+						case 'y':
+							line = lineY;
+							break;
+						case 'z':
+							line = lineZ;
+							break;
+						default: console.error( 'AxesHelper.dotLines.dottedLines.dottedLine: axesId = ' + axesId );
+							return;
+
+					}
+					if ( !line )
+						return;//Current axis is not exists
+					var lineVertices = line.geometry.attributes.position.array;
+					lineVertices[0] = axisName === 'x' ? pointVertice.x :
+						verticeAxis( group.position.x, group.scale.x );
+					lineVertices[1] = axisName === 'y' ? pointVertice.y :
+						verticeAxis( group.position.y, group.scale.y );
+					lineVertices[2] = axisName === 'z' ? pointVertice.z :
+						verticeAxis( group.position.z, group.scale.z );
+
+					lineVertices[3] = pointVertice.x;
+					lineVertices[4] = pointVertice.y;
+					lineVertices[5] = pointVertice.z;
+
+					var size = getDashSize();//axesId );
+					lineX.material.dashSize = size;
+					lineX.material.gapSize = size;
+
+					line.geometry.attributes.position.needsUpdate = true;
+
+				}
+				dottedLine( 'x' );
+				dottedLine( 'y' );
+				dottedLine( 'z' );
+				return;
+
+			}
+
+			createGroup();
+
+			function dottedLine( axisName /*axesId*/ ) {
+
+				if ( !options.scales[axisName] )
+					return;
+				var lineVertices = [
+					new THREE.Vector3( 0, 0, 0 ),
+					pointVertice,
+				];
+/*				
+				lineVertices[0].x = axesId === axesHelper.axesEnum.x ? lineVertices[1].x : verticeAxis( options.scene.position.x, options.scene.scale.x );//- options.scene.position.x / options.scene.scale.x;
+				lineVertices[0].y = axesId === axesHelper.axesEnum.y ? lineVertices[1].y : verticeAxis( options.scene.position.y, options.scene.scale.y );//- options.scene.position.y / options.scene.scale.y;
+				lineVertices[0].z = axesId === axesHelper.axesEnum.z ? lineVertices[1].z : verticeAxis( options.scene.position.z, options.scene.scale.z );//- options.scene.position.z / options.scene.scale.z;
+*/				
+				lineVertices[0].x = axisName === 'x' ? lineVertices[1].x : verticeAxis( group.position.x, group.scale.x );
+				lineVertices[0].y = axisName === 'y' ? lineVertices[1].y : verticeAxis( group.position.y, group.scale.y );
+				lineVertices[0].z = axisName === 'z' ? lineVertices[1].z : verticeAxis( group.position.z, group.scale.z );
+
+				var size = getDashSize();
+				if ( options.colorsHelper === undefined )
+					options.colorsHelper = 0x80;
+				var line = new THREE.LineSegments( new THREE.BufferGeometry().setFromPoints( lineVertices ),
+					new THREE.LineDashedMaterial( {
+						color: 'rgb(' + options.colorsHelper + ', ' + options.colorsHelper + ', ' + options.colorsHelper + ')',
+						dashSize: size, gapSize: size
+					} ) );
+				line.computeLineDistances();
+				groupDotLines.add( line );
+				return line;
+
+			}
+			lineX = dottedLine( 'x' );
+			lineY = dottedLine( 'y' );
+			lineZ = dottedLine( 'z' );
+
+		};
+		this.update = function () {
+
+			if ( groupDotLines === undefined )
+				return;
+
+			function dottedLine( axesId, line ) {
+
+				var size = getDashSize( axesId );
+				line.material.dashSize = size;
+				line.material.gapSize = size;
+
+				var positionArray = line.geometry.attributes.position.array,
+					itemSize = line.geometry.attributes.position.itemSize;
+				positionArray[itemSize + axesHelper.axesEnum.x] =
+					axesId === axesHelper.axesEnum.x ? positionArray[axesHelper.axesEnum.x]
+						: verticeAxis( options.scene.position.x, options.scene.scale.x );
+				positionArray[itemSize + axesHelper.axesEnum.y] =
+					axesId === axesHelper.axesEnum.y ? positionArray[axesHelper.axesEnum.y]
+						: verticeAxis( options.scene.position.y, options.scene.scale.y );
+				positionArray[itemSize + axesHelper.axesEnum.z] =
+					axesId === axesHelper.axesEnum.z ? positionArray[axesHelper.axesEnum.z]
+						: verticeAxis( options.scene.position.z, options.scene.scale.z );
+				line.geometry.attributes.position.needsUpdate = true;
+
+			}
+			dottedLine( axesHelper.axesEnum.x, groupDotLines.children[axesHelper.axesEnum.x] );
+			dottedLine( axesHelper.axesEnum.y, groupDotLines.children[axesHelper.axesEnum.y] );
+			dottedLine( axesHelper.axesEnum.z, groupDotLines.children[axesHelper.axesEnum.z] );
+
+		}
+		this.movePointAxes = function ( axesId, value ) {
+
+			var line;
+			switch ( axesId ) {
+
+				case mathBox.axesEnum.x:
+					line = lineX;
+					break;
+				case mathBox.axesEnum.y:
+					line = lineY;
+					break;
+				case mathBox.axesEnum.z:
+					line = lineZ;
+					break;
+				default: console.error( 'point.userData.movePointAxes: invalid axesId: ' + axesId );
+					return;
+
+			}
+			if ( line === undefined )
+				return;
+			line.geometry.attributes.position.array[axesId + 3] = value;
+
+			lineX.geometry.attributes.position.array[axesId] = value;
+			lineY.geometry.attributes.position.array[axesId] = value;
+			lineZ.geometry.attributes.position.array[axesId] = value;
+
+			lineX.geometry.attributes.position.needsUpdate = true;
+			lineY.geometry.attributes.position.needsUpdate = true;
+			lineZ.geometry.attributes.position.needsUpdate = true;
+
+		};
+
+	}
+	dotLines = new dotLines( group );
+
 	/**
 	* Expose position on axes.
 	* @param {THREE.Vector3} pointVertice position
 	*/
 	this.exposePosition = function ( pointVertice ) {
 
-console.warn( 'AxesHelper.exposePosition: Under constraction' );
-/*
 		if ( pointVertice === undefined )
 			dotLines.remove();
 		else dotLines.dottedLines( pointVertice );
-*/
 
 	}
 

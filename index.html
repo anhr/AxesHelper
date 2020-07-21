@@ -51,12 +51,15 @@
 		//import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 
 		import { getLanguageCode } from '../../commonNodeJS/master/lang.js';//https://github.com/anhr/commonNodeJS
-		//import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
+		//import { getLanguageCode as getLanguageCodeF } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
 
 		import { SpriteText, SpriteTextGui } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
 		//import { SpriteText, SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
-		var camera, scene, renderer, axesHelper, controls, intersects;
+		import { guiSelectPoint as guiSelectPointF } from '../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
+		//import guiSelectPoint as guiSelectPointF from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+
+		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint;
 		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;
 		raycaster.params.Points.threshold = threshold;
 
@@ -98,7 +101,7 @@
 			//AxesHelper
 
 //			var scale = 180, colorsHelper = 0x80;
-
+			/*
 			axesHelper = new AxesHelper ( scene, {
 
 					//colors: colorsHelper / 0xff, //gray axes
@@ -134,15 +137,12 @@
 						},
 						y: {
 							
-							/*
 							name: 'Y',
 							min: -1,
 							max: 1,
-							*/
 							marks: 3,
 
 						},
-						/*
 						z: {
 							
 							//name: 'Z',
@@ -151,13 +151,13 @@
 							marks: 11,
 							
 						},
-						*/
 
 					},
 //					dimensions: 3,
 
 				} );
 //			scene.add( axesHelper );
+			*/
 
 			const points = new THREE.Points( new THREE.BufferGeometry().setFromPoints( [
 					new THREE.Vector3( 0.5, 0.5 ,0.5 ),
@@ -166,8 +166,10 @@
 				new THREE.PointsMaterial( {
 
 					color: 0xffffff,
-					size: threshold * 2,//0.05,
-					alphaTest: 0.5
+					//size: threshold * 2,//0.05,
+					size: 5,//0.05,
+					sizeAttenuation: false,
+					alphaTest: 0.5,
 //					vertexColors: THREE.VertexColors
 
 				} ) );
@@ -272,6 +274,16 @@
 
 			} );
 
+			guiSelectPoint = new guiSelectPointF( { axesHelper: axesHelper, } );
+			guiSelectPoint.add( gui, {
+				
+//				cookie: cookie,
+				//getLanguageCode: getLanguageCode,
+
+			} );
+			guiSelectPoint.addPointControllers();
+			guiSelectPoint.addMesh( points );
+			
 			SpriteTextGui( gui, scene, {
 
 				getLanguageCode: getLanguageCode,
@@ -283,28 +295,15 @@
 
 			} );
 
-			axesHelper.gui( gui, {
-				
-				cookie: cookie,
-				//cookieName: 'mySettings',
-				getLanguageCode: getLanguageCode,
+			if ( axesHelper )
+				axesHelper.gui( gui, {
 
-			} );
-			/*
-			gui.domElement.addEventListener( 'mouseenter', function ( event ) { mouseenter = true; } );
-			gui.domElement.addEventListener( 'mouseleave', function ( event ) { mouseenter = false; } );
-			*/
-/*
-			AxesHelperGui( gui, {
+					cookie: cookie,
+					//cookieName: 'mySettings',
+					getLanguageCode: getLanguageCode,
 
-				axesHelper: axesHelper,
-				//options: options,
-				//cookie: cookie,
-				//getLanguageCode: getLanguageCode,
-				//guiSelectPoint: options.guiSelectPoint,
+				} );
 
-			} );
-*/
 		}
 		function onWindowResize() {
 
@@ -364,6 +363,8 @@
 
 					const intersect = intersects[0];
 					intersect.object.userData.raycaster.onMouseDown( intersect );
+					if ( guiSelectPoint )
+						guiSelectPoint.select( intersect );
 
 				}
 
