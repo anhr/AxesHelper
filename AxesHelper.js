@@ -25,19 +25,24 @@ import PositionController from '../../commonNodeJS/master/PositionController.js'
 import Cookie from '../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
 //import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 
+//import * as THREE from 'https://threejs.org/build/three.module.js';
 //import { THREE } from '../../three.js';
 //import * as THREE from '../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js;
-import { THREE } from '../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
+//import { THREE } from '../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 //import * as THREE from 'https://raw.githack.com/anhr/three.js/dev/build/three.module.js';
 
-import { SpriteText, SpriteTextGui } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
-//import { SpriteText, SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+//import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+
+import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
+//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
 import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 //import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
 import clearThree from '../../commonNodeJS/master/clearThree.js';//https://github.com/anhr/commonNodeJS
-//import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
+//import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
+
 
 /**
  * 
@@ -66,8 +71,10 @@ import clearThree from '../../commonNodeJS/master/clearThree.js';//https://githu
  * See https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera.fov about camera.fov.
  * Default is undefined. Default camera.fov is 50.
 */
-export function AxesHelper( group, options/*, camera*/ ) {
+export function AxesHelper( THREE, group, options ) {
 
+	SpriteText.setTHREE( THREE );
+	
 	options = options || {};
 	options.color = options.color || 'white';//0xffffff;
 
@@ -94,6 +101,7 @@ export function AxesHelper( group, options/*, camera*/ ) {
 			return;
 		if ( scale.min === undefined ) scale.min = - 1;
 		if ( scale.max === undefined ) scale.max = 1;
+		if ( scale.marks === undefined ) scale.marks = 3;
 		if ( scale.offset === undefined ) scale.offset = 0.1;
 		if ( scale.zoomMultiplier === undefined ) scale.zoomMultiplier = 1.1;
 
@@ -136,6 +144,7 @@ export function AxesHelper( group, options/*, camera*/ ) {
 		rect: options.scales.text.rect,
 
 	}
+	group.add( groupAxesHelper );
 /*
 	let axesGroups = new THREE.Vector3(
 
@@ -400,7 +409,6 @@ sprite.scale.y /= 2;
 	createAxis( 'x' );
 	createAxis( 'y' );
 	createAxis( 'z' );
-	group.add( groupAxesHelper );
 
 //	updateSpriteTextGroup( groupAxesHelper );
 
@@ -792,7 +800,7 @@ sprite.scale.y /= 2;
 
 		}
 
-		const fSpriteText = SpriteTextGui( gui, groupAxesHelper, {
+		const fSpriteText = typeof SpriteTextGui === "undefined" ? undefined : SpriteTextGui( gui, groupAxesHelper, {
 
 			getLanguageCode: guiParams.getLanguageCode,
 			//settings: { zoomMultiplier: 1.5, },
@@ -1085,8 +1093,8 @@ sprite.scale.y /= 2;
 		function displayControllers() {
 
 			var display = options.scales.display ? 'block' : 'none';
-//			if ( fSpriteText !== undefined )
-			fSpriteText.domElement.style.display = display;
+			if ( fSpriteText !== undefined )
+				fSpriteText.domElement.style.display = display;
 			if ( controllerPrecision !== undefined )	
 				controllerPrecision.domElement.parentElement.parentElement.style.display = display;
 

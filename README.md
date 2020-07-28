@@ -2,7 +2,7 @@
 
 An axis object to visualize the 1, 2 or 3 axes.
 
-I use AxesHelper in my [three.js](https://threejs.org/) projects for displaying of the text in axes canvas.
+I use AxesHelper in my [three.js](https://threejs.org/) projects for displaying of the axes in canvas.
 [Example](https://raw.githack.com/anhr/AxesHelper/master/).
 
 Uses in my projects:
@@ -17,7 +17,7 @@ Uses in my projects:
 * Download [cookieNodeJS](https://github.com/anhr/cookieNodeJS) repository into your "[folderName]\cookieNodeJS\master" folder.
 * Download [dat.gui](https://github.com/anhr/dat.gui) repository into your "[folderName]\dat.gui\CustomController" folder.
 * Download [SpriteText](https://github.com/anhr/SpriteText) repository into your "[folderName]\SpriteText\master" folder.
-* Open http://localhost/[folderName]/SpriteText/master/index.html for testing of your downloads.
+* Open http://localhost/[folderName]/AxesHelper/master/index.html for testing of your downloads.
 
 The easiest way to use AxesHelper in your code is import AxesHelper from AxesHelper.js file in your JavaScript module. [Example](https://raw.githack.com/anhr/AxesHelper/master/)
 ```
@@ -62,10 +62,6 @@ LG Smart tv
 
 	Chrome - Fatal error: Your browser do not support modular JavaScript code
 
-
-## Thanks
-
-[three-spritetext](https://github.com/vasturiano/three-spritetext).
 
  ## Have a job for me?
 Please read [About Me](https://anhr.github.io/AboutMe/).
