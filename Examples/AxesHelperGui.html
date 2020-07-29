@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8" />
-	<title>AxesHelper</title>
+	<title>AxesHelperGui</title>
 
 	<!--for mobile devices-->
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -35,32 +35,35 @@
 	<script type="module">
 
 		//import * as THREE from 'https://threejs.org/build/three.module.js';
-		import * as THREE from '../../three.js/dev/build/three.module.js';
+		import * as THREE from '../../../three.js/dev/build/three.module.js';
 		//import { THREE } from '../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
-		import { AxesHelper } from './AxesHelper.js';//https://github.com/anhr/AxesHelper
+		import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
 		//import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
 
-		import { OrbitControls } from '../../three.js/dev/examples/jsm/controls/OrbitControls.js';//https://github.com/anhr/three.js
+		import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
+		//import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
+		
+		import { OrbitControls } from '../../../three.js/dev/examples/jsm/controls/OrbitControls.js';//https://github.com/anhr/three.js
 		//import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
 
-		import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
+		import { dat } from '../../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 		//import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
-		import cookie from '../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
+		import cookie from '../../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
 		//import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 
-		import { getLanguageCode } from '../../commonNodeJS/master/lang.js';//https://github.com/anhr/commonNodeJS
+		import { getLanguageCode } from '../../../commonNodeJS/master/lang.js';//https://github.com/anhr/commonNodeJS
 		//import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
 
-		import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+		import { SpriteText } from '../../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
 		//import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
-		import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
+		import { SpriteTextGui } from '../../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
 		//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
-		import { GuiSelectPoint } from '../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
+		import { GuiSelectPoint } from '../../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
 		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
 		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint;
@@ -318,8 +321,15 @@
 						//options: groupAxesHelper.userData.optionsSpriteText,
 
 					} );
-
 				if ( axesHelper )
+					AxesHelperGui( axesHelper, gui, {
+
+						cookie: cookie,
+						//cookieName: 'mySettings',
+						getLanguageCode: getLanguageCode,
+
+					} );
+/*				
 					axesHelper.gui( gui, {
 
 						cookie: cookie,
@@ -327,6 +337,7 @@
 						getLanguageCode: getLanguageCode,
 
 					} );
+*/					
 
 			}
 
