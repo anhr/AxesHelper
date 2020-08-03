@@ -34,9 +34,11 @@
 
 	<script type="module">
 
-		//import * as THREE from 'https://threejs.org/build/three.module.js';
+		/*ATTENTION!!! Do not use this modules, because you cannot select a point by mouse.
+		import * as THREE from 'https://threejs.org/build/three.module.js';
 		import * as THREE from '../../../three.js/dev/build/three.module.js';
-		//import { THREE } from '../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
+		*/
+		import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
 		import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
@@ -63,11 +65,14 @@
 		import { SpriteTextGui } from '../../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
 		//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
-		import { GuiSelectPoint } from '../../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
+		import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
 		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
-		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint;
-		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;
+		import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
+		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
+
+		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint, moveGroup;
+		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.05;//0.02;
 		raycaster.params.Points.threshold = threshold;
 
 		init();
@@ -105,12 +110,54 @@
 
 			}
 
+			const scales = {
+
+				display: true,
+				text: {
+
+					//textHeight: 0.03,
+					//fov: camera.fov,
+					precision: 4,
+					rect: { displayRect: true },
+
+				},
+				x: {
+
+					//zoomMultiplier: 2,
+					//offset: 1,
+					name: 'Wave',
+					min: 0,
+					max: 1,
+					marks: 11,
+
+				},
+				y: {
+
+					name: 'Y',
+					min: -1,
+					max: 1,
+					marks: 3,
+
+				},
+				z: {
+
+					//name: 'Z',
+					min: -3,
+					max: -1,
+					marks: 7,
+
+				},
+
+			}
+
+			const groupMove = new THREE.Group();
+			scene.add( groupMove );
+			
 			//AxesHelper
 
-//			var scale = 180, colorsHelper = 0x80;
 			if ( typeof AxesHelper !== "undefined" ) {
 
-				axesHelper = new AxesHelper ( THREE, scene, {
+				axesHelper = new AxesHelper ( THREE, scene.add( new THREE.Group() ), {
 
 						//colors: colorsHelper / 0xff, //gray axes
 						color: 'rgba(255, 255, 255, 0.5)',
@@ -122,50 +169,29 @@
 
 						camera: camera,
 
-						scales: {
-
-							display: true,
-							text: {
-
-								//textHeight: 0.03,
-								//fov: camera.fov,
-								precision: 4,
-								rect: { displayRect: true },
-
-							},
-							x: {
-
-								//zoomMultiplier: 2,
-								//offset: 1,
-								name: 'Wave',
-								min: 0,
-								max: 1,
-								marks: 7,
-
-							},
-							y: {
-
-								name: 'Y',
-								min: -1,
-								max: 1,
-								marks: 3,
-
-							},
-							z: {
-
-								//name: 'Z',
-								min: -3,
-								max: -1,
-								marks: 11,
-
-							},
-
-						},
+						scales: scales,
+						groupMove: groupMove,
 	//					dimensions: 3,
 
 					} );
 	//			scene.add( axesHelper );
 	
+			}
+
+			//MoveGroup
+
+			if ( typeof MoveGroup !== "undefined" ) {
+
+				moveGroup = new MoveGroup( groupMove, {
+
+					scales: scales,
+					cookie: cookie,
+//				cookieName: getCanvasName(),
+					axesHelper: axesHelper,
+//					guiSelectPoint: guiSelectPoint,
+
+				} );
+
 			}
 
 			const points = new THREE.Points( new THREE.BufferGeometry().setFromPoints( [
@@ -186,8 +212,12 @@
 //			points.geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( [1,1,1], 3 ) );
 			//			points.name = 'Points1';
 			arrayintersectObjects.push( points );
-			function getIntersectionPosition( intersection )
-				{ return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize ); }
+			function getIntersectionPosition( intersection ) {
+				
+				return getObjectPosition( intersection.object, intersection.index );
+//				return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
+			
+			}
 			points.userData.raycaster = {
 
 				onIntersection: function ( intersection ) {
@@ -255,13 +285,14 @@
 
 					if ( !axesHelper )
 						return;
-					axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+//					axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+					axesHelper.exposePosition( intersect );
 
 				}
 
 
 			}
-			scene.add( points );
+			groupMove.add( points );
 
 			scene.add( new THREE.AmbientLight( 0x222222 ) );
 
@@ -300,15 +331,19 @@
 
 				} );
 
-				guiSelectPoint = new GuiSelectPoint( { axesHelper: axesHelper, } );
-				guiSelectPoint.add( gui, {
+				if ( typeof GuiSelectPoint !== "undefined" ) {
 
-	//				cookie: cookie,
-					//getLanguageCode: getLanguageCode,
+					guiSelectPoint = new GuiSelectPoint( { axesHelper: axesHelper, } );
+					guiSelectPoint.add( gui, {
 
-				} );
-//				guiSelectPoint.addPointControllers();
-				guiSelectPoint.addMesh( points );
+		//				cookie: cookie,
+						//getLanguageCode: getLanguageCode,
+
+					} );
+	//				guiSelectPoint.addPointControllers();
+					guiSelectPoint.addMesh( points );
+
+				}
 
 				if ( typeof SpriteTextGui !== "undefined" )
 					SpriteTextGui( gui, scene, {
@@ -319,6 +354,15 @@
 						//cookieName: 'SpriteText',
 						//parentFolder: fScales,
 						//options: groupAxesHelper.userData.optionsSpriteText,
+
+					} );
+				if ( moveGroup )
+					moveGroup.gui( gui, {
+
+						cookie: cookie,
+						getLanguageCode: getLanguageCode,
+						lang: { moveGroup: 'Move Meshs', },
+						guiSelectPoint: guiSelectPoint,
 
 					} );
 				if ( axesHelper )
@@ -375,6 +419,38 @@
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 //			console.warn( 'mouse.x = ' + mouse.x + ' mouse.y = ' + mouse.y );
 
+			//Raycaster https://threejs.org/docs/index.html#api/en/core/Raycaster
+
+			// update the picking ray with the camera and mouse position
+			raycaster.setFromCamera( mouse, camera );
+
+			// calculate objects intersecting the picking ray
+			intersects = raycaster.intersectObjects( arrayintersectObjects );
+//			intersects = raycaster.intersectObjects( scene.children );
+//			const intersects = raycaster.intersectObjects( arrayintersectObjects );
+
+			arrayintersectObjects.forEach( function ( object ) {
+
+				if ( !intersects )
+					return;
+				var bIntersected = false;
+				for ( var i = 0; i < intersects.length; i++ ) {
+
+					const intersect = intersects[ i ];
+//					const objectIntersect = intersects[ i ].object;
+					if ( Object.is( object, intersect.object ) ) {
+
+						object.userData.raycaster.onIntersection( intersect );
+						bIntersected = true;
+
+					}
+
+				}
+				if ( !bIntersected )
+					object.userData.raycaster.onIntersectionOut();
+
+			} );
+
 		}, false );
 		window.addEventListener( 'mousedown', function( event ) {
 
@@ -414,13 +490,15 @@
 			requestAnimationFrame( animate );
 
 			//Raycaster https://threejs.org/docs/index.html#api/en/core/Raycaster
-
+/*
 			// update the picking ray with the camera and mouse position
 			raycaster.setFromCamera( mouse, camera );
 
 			// calculate objects intersecting the picking ray
-			intersects = raycaster.intersectObjects( scene.children );
+			intersects = raycaster.intersectObjects( arrayintersectObjects );
+//			intersects = raycaster.intersectObjects( scene.children );
 //			const intersects = raycaster.intersectObjects( arrayintersectObjects );
+*/
 /*
 			arrayintersectObjects.forEach( function ( object ) {
 
@@ -443,8 +521,11 @@
 
 			} );
 */
+/*
 			arrayintersectObjects.forEach( function ( object ) {
 
+				if ( !intersects )
+					return;
 				var bIntersected = false;
 				for ( var i = 0; i < intersects.length; i++ ) {
 
@@ -462,6 +543,7 @@
 					object.userData.raycaster.onIntersectionOut();
 
 			} );
+*/
 
 			renderer.render( scene, camera );
 
