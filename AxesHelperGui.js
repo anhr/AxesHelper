@@ -173,8 +173,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 	guiParams.axesHelperFolder = guiParams.axesHelperFolder || lang.axesHelper;
 	const cookieName = guiParams.cookieName || guiParams.axesHelperFolder,
-		cookie = guiParams.cookie || new Cookie.defaultCookie();
+		cookie = guiParams.cookie || new Cookie.defaultCookie(),
+		optionsGroupMove = options.groupMove;
 	cookie.getObject( cookieName, options, options );
+	options.groupMove = optionsGroupMove;
 
 	function setSettings() { cookie.setObject( cookieName, options ); }
 
@@ -267,7 +269,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 					axes.max = action( axes.max, zoom );
 					scaleControllers.max.setValue( axes.max );
-					scaleControllers.onchangeWindowRange( windowRange, axes );
+					scaleControllers.onchangeWindowRange();// windowRange, axes );
 
 				}
 
@@ -303,7 +305,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 		Object.freeze( axesDefault );
 
-		function onchangeWindowRange( windowRange, scale ) {
+		function updateAxis() {
 
 			groupAxesHelper.children.forEach( function ( group ) {
 
@@ -313,6 +315,13 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 				axesHelper.createAxis( axisName );
 
 			} );
+
+		}
+		scaleControllers.updateAxis = updateAxis;
+
+		function onchangeWindowRange() {
+
+			updateAxis();
 			setSettings();
 
 		}
@@ -449,7 +458,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 	scale('x');
 	scale('y');
 	scale('z');
-	scale('w');
+//	scale('w');
 /*		
 	scale( options.scales.x,
 		guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeX,
@@ -501,8 +510,8 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 	}
 	displayControllers();
 	
-	scalesControllers.x.onchangeWindowRange();
-	scalesControllers.y.onchangeWindowRange();
-	scalesControllers.z.onchangeWindowRange();
+	scalesControllers.x.updateAxis();
+	scalesControllers.y.updateAxis();
+	scalesControllers.z.updateAxis();
 
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -72,7 +72,7 @@
 		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
 
 		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint, moveGroup;
-		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.05;//0.02;
+		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;
 		raycaster.params.Points.threshold = threshold;
 
 		init();
