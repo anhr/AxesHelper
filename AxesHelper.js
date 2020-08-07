@@ -25,8 +25,9 @@ import { getObjectPosition } from '../../commonNodeJS/master/guiSelectPoint.js';
 
 
 /**
- * 
- * @param {any} group THREE group or scene
+ * An axis object to visualize the 1, 2 or 3 axes.
+ * @param {THREE} THREE {@link https://github.com/anhr/three.js|THREE}
+ * @param {THREE.Group|THREE.Scene} group THREE group or scene
  * @param {object} [options] followed options is available
  * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.
  * @param {number} [options.scales] axes scales. Default is {}
@@ -91,29 +92,6 @@ export function AxesHelper( THREE, group, options ) {
 	scaleOptions('x');
 	scaleOptions('y');
 	scaleOptions('z');
-/*
-	//cookie
-	const cookie = options.cookie || new Cookie.defaultCookie();
-	const cookieName = 'AxesHelper' + ( options.cookieName ? '_' + options.cookieName : '' );
-	const optionsDefault = JSON.parse( JSON.stringify( options ) );
-	Object.freeze( optionsDefault );
-	cookie.getObject( cookieName, options, optionsDefault );
-	
-	//если количество осей изменилось а в cookie осталось прежнее количество осей,
-	//то надо восстановить количество осей после загрузки из cookie
-	function restoreAxis( axisName ) {
-
-		if ( ( options.scales[axisName] === undefined ) && ( optionsDefault.scales[axisName] !== undefined ) )
-			options.scales[axisName] = JSON.parse( JSON.stringify( optionsDefault.scales[axisName] ) );//В будкщем значение options.scales будет меняться. Поэтому копирую. Пока что не проверял
-		else if ( optionsDefault.scales[axisName] === undefined )
-			options.scales[axisName] = undefined;
-
-	}
-	restoreAxis( 'x' );
-	restoreAxis( 'y' );
-	restoreAxis( 'z' );
-	options.camera.fov = optionsDefault.camera.fov;
-*/	
 
 	this.options = options;
 
@@ -128,18 +106,8 @@ export function AxesHelper( THREE, group, options ) {
 
 	}
 	group.add( groupAxesHelper );
-/*
-	let axesGroups = new THREE.Vector3(
-
-		!options.scales.x ? 0 : new THREE.Group(),
-		!options.scales.y ? 0 : new THREE.Group(),
-		!options.scales.z ? 0 : new THREE.Group()
-
-	);
-*/
 
 	const posAxesIntersection = new THREE.Vector3().copy( group.position ).divide( group.scale );//For moving of the axes intersection to the center of the canvas ( to the camera focus ) 
-//		axesGroups = {};
 
 	/**
 	 * create axis
@@ -459,7 +427,7 @@ sprite.scale.y /= 2;
 		this.dottedLines = function ( _intersection ) {
 
 			intersection = _intersection;
-			const pointVertice = getObjectPosition( intersection.object, intersection.index );
+			const pointVertice = intersection instanceof THREE.Vector4 || intersection instanceof THREE.Vector3 ? intersection : getObjectPosition( intersection.object, intersection.index );
 			if ( groupDotLines !== undefined ) {
 
 				function dottedLine( axisName/*axesId*/ ) {
@@ -643,6 +611,7 @@ sprite.scale.y /= 2;
 			return;
 
 		}
+/*		
 		if ( intersection instanceof THREE.Vector3 ) {
 
 //			dotLines.dottedLines( intersection );
@@ -650,6 +619,7 @@ sprite.scale.y /= 2;
 			return;
 
 		}
+*/		
 		dotLines.dottedLines( intersection );
 //		dotLines.dottedLines( getObjectPosition( intersection.object, intersection.index ) );
 /*		

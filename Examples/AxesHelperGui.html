@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -18,7 +18,6 @@
 	https://searchcode.com/codesearch/view/85060658/
 	<script src="../../../webgl-debug/webgl-debug/build/webgl-debug.js"></script>
 	-->
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<!--<link type="text/css" rel="stylesheet" href="main.css">-->
 	<link type="text/css" rel="stylesheet" href="https://threejs.org/examples/main.css">
 
@@ -34,11 +33,9 @@
 
 	<script type="module">
 
-		/*ATTENTION!!! Do not use this modules, because you cannot select a point by mouse.
-		import * as THREE from 'https://threejs.org/build/three.module.js';
-		import * as THREE from '../../../three.js/dev/build/three.module.js';
-		*/
-		import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
+		import * as THREE from '../../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js
+		//import * as THREE from 'https://threejs.org/build/three.module.js';
+		//import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
 		import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
@@ -69,11 +66,14 @@
 		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
 		import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
-		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
+		//import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
 
-		var camera, scene, renderer, axesHelper, controls, intersects, guiSelectPoint, moveGroup;
-		const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;
-		raycaster.params.Points.threshold = threshold;
+		import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
+		//import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+
+		var camera, scene, renderer, stereoEffect, axesHelper, controls, intersects, guiSelectPoint, moveGroup, raycaster;
+		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;//raycaster = new THREE.Raycaster() 
+//		raycaster.params.Points.threshold = threshold;
 
 		init();
 		animate();
@@ -208,14 +208,16 @@
 //					vertexColors: THREE.VertexColors
 
 				} ) );
+			points.position.copy( new THREE.Vector3( 0.1, 0, 0 ) );
 //			points.material.color.set( 0xff0000 );
 //			points.geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( [1,1,1], 3 ) );
 			//			points.name = 'Points1';
 			arrayintersectObjects.push( points );
 			function getIntersectionPosition( intersection ) {
 				
-				return getObjectPosition( intersection.object, intersection.index );
-//				return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
+				if ( typeof getObjectPosition !== 'undefined' )
+					return getObjectPosition( intersection.object, intersection.index );
+				return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
 			
 			}
 			points.userData.raycaster = {
@@ -225,47 +227,45 @@
 					if ( !this.bIntersectionOut )
 						return;
 					this.bIntersectionOut = false;
-/*					
-					const position = new THREE.Vector3();
-					position.fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
-*/					
-					const position = getIntersectionPosition( intersection );
-					//console.warn( 'onIntersection x = ' + position.x + ' y =  ' + position.y + ' z = ' +  position.z );
 
-					var x, y, z;
-					if ( axesHelper ) {
+					if ( typeof SpriteText !== 'undefined' ) {
 
-						const scales = axesHelper.options.scales;
-						x = scales.x.name;
-						y = scales.y.name;
-						z = scales.z.name;
+						const position = getIntersectionPosition( intersection );
+						//console.warn( 'onIntersection x = ' + position.x + ' y =  ' + position.y + ' z = ' +  position.z );
 
-					} else {
+						var x, y, z;
+						if ( axesHelper ) {
 
-						x = 'x';
-						y = 'y';
-						z = 'z';
-						
-					}
-					this.spriteText = new SpriteText(
-						'Point\n' + x + ' = ' + position.x + '\n' + y + ' =  ' + position.y + '\n' + z + ' = ' +  position.z,
-						position, {
+							const scales = axesHelper.options.scales;
+							x = scales.x.name;
+							y = scales.y.name;
+							z = scales.z.name;
 
-							group: scene,
-							rect: {
+						} else {
 
-								displayRect: true,
-								borderRadius: 15,
-
-							},
-							center: new THREE.Vector2( 1, 0 ),
-							//sizeAttenuation: true,
+							x = 'x';
+							y = 'y';
+							z = 'z';
 
 						}
-					);
-//					scene.add( this.spriteText );
-					
-//					options.addSpriteTextIntersection( intersection, scene, mouse );
+						this.spriteText = new SpriteText(
+							'Point\n' + x + ' = ' + position.x + '\n' + y + ' =  ' + position.y + '\n' + z + ' = ' +  position.z,
+							position, {
+
+								group: scene,
+								rect: {
+
+									displayRect: true,
+									borderRadius: 15,
+
+								},
+								center: new THREE.Vector2( 1, 0 ),
+								//sizeAttenuation: true,
+
+							}
+						);
+
+					}
 					renderer.domElement.style.cursor = 'pointer';
 
 				},
@@ -316,9 +316,80 @@
 
 			//
 
-			controls = new OrbitControls( camera, renderer.domElement );
-			controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.z * 2 );
-			controls.update();
+			if ( typeof OrbitControls !== 'undefined' ) {
+
+				controls = new OrbitControls( camera, renderer.domElement );
+				controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.z * 2 );
+				controls.update();
+
+			}
+
+			if ( typeof StereoEffect !== "undefined" ) {
+
+				stereoEffect = new StereoEffect( THREE, renderer, {
+
+					spatialMultiplex: spatialMultiplexsIndexs.Mono,
+					far: camera.far,
+					camera: camera,
+					cookie: cookie,
+					//stereoAspect: 1,
+
+				} );
+				stereoEffect.setSize( window.innerWidth, window.innerHeight );
+			
+			}
+
+			raycaster = new THREE.Raycaster();
+			raycaster.params.Points.threshold = threshold;
+			if ( raycaster.setStereoEffect !== undefined ) {
+
+				raycaster.setStereoEffect( {
+
+					renderer: renderer,
+					camera: camera,
+					stereoEffect: stereoEffect,
+					onIntersection: function ( intersects, mouse ) {
+
+						points.userData.raycaster.onIntersection( intersects[0] );
+						/*
+												intersects.forEach( function ( intersection ) {
+						
+													if ( intersection.object.userData.raycaster !== undefined ) {
+						
+														intersection.object.userData.raycaster.onIntersection( raycaster, intersection, scene, mouse );
+														INTERSECTED.push( intersection.object );
+						
+													}
+						
+												} );
+						*/
+
+					},
+					onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
+					onMouseDown: function ( intersects ) {
+
+						var intersection = intersects[0];
+						if (
+							( intersection.object.userData.raycaster !== undefined )
+							&& ( intersection.object.userData.raycaster.onMouseDown !== undefined ) ) {
+
+//							intersection.object.userData.raycaster.onMouseDown( raycaster, intersection, scene );
+							intersection.object.userData.raycaster.onMouseDown( intersection );
+
+						}
+						if ( ( intersection.object.userData.isInfo !== undefined ) && !intersection.object.userData.isInfo() )
+							return;//No display information about frustum point
+						guiSelectPoint.select( intersection );
+						if ( ( intersection.object.type === "Points" ) && ( axesHelper !== undefined ) )
+							axesHelper.exposePosition( intersection );
+						//							axesHelper.exposePosition( getPosition( intersection ) );
+
+					}
+
+				} );
+				raycaster.stereo.addParticle( points );
+
+			}
 
 			//dat-gui JavaScript Controller Library
 			if ( typeof dat !== "undefined" ) {
@@ -333,14 +404,15 @@
 
 				if ( typeof GuiSelectPoint !== "undefined" ) {
 
-					guiSelectPoint = new GuiSelectPoint( { axesHelper: axesHelper, } );
+					GuiSelectPoint.setTHREE( THREE );
+					
+					guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
 					guiSelectPoint.add( gui, {
 
 		//				cookie: cookie,
 						//getLanguageCode: getLanguageCode,
 
 					} );
-	//				guiSelectPoint.addPointControllers();
 					guiSelectPoint.addMesh( points );
 
 				}
@@ -383,6 +455,15 @@
 					} );
 */					
 
+				//StereoEffect settings
+				if ( typeof stereoEffect !== "undefined" )
+					stereoEffect.gui( gui, {
+
+						getLanguageCode: getLanguageCode,
+						gui: gui,
+
+					} );
+
 			}
 
 		}
@@ -424,6 +505,12 @@
 			// update the picking ray with the camera and mouse position
 			raycaster.setFromCamera( mouse, camera );
 
+			if ( raycaster.stereo !== undefined ) {
+
+				raycaster.stereo.onDocumentMouseMove( event );
+				return;
+
+			}
 			// calculate objects intersecting the picking ray
 			intersects = raycaster.intersectObjects( arrayintersectObjects );
 //			intersects = raycaster.intersectObjects( scene.children );
@@ -461,16 +548,14 @@
 			if ( mouseenter )
 				return;
 */
-/*
 			if ( raycaster.stereo !== undefined ) {
 
 				raycaster.stereo.onDocumentMouseDown( event );
 				return;
 
 			}
-			raycaster.setFromCamera( mouse, camera );
-*/
-			if ( intersects.length > 0 ) {
+//			raycaster.setFromCamera( mouse, camera );
+			if ( intersects && (intersects.length > 0 ) ) {
 
 				if ( intersects[0].object.userData.raycaster ) {
 
@@ -545,7 +630,9 @@
 			} );
 */
 
-			renderer.render( scene, camera );
+			if ( stereoEffect === undefined )
+				renderer.render( scene, camera );
+			else stereoEffect.render( scene, camera );
 
 		}
 
