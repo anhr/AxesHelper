@@ -3,7 +3,8 @@
 An axis object to visualize the 1, 2 or 3 axes.
 
 I use AxesHelper in my [three.js](https://threejs.org/) projects for displaying of the axes in canvas.
-[Example](https://raw.githack.com/anhr/AxesHelper/master/).
+[Example 1](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelper.html).
+[Example 2](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelperGui.html).
 
 Uses in my projects:
  * [AxesHelper](https://github.com/anhr/AxesHelper)
