@@ -29,7 +29,7 @@ or
 import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
 ```
 
-Now you can use AxesHelper in your javascript code. See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/jsdoc/index.html) for details.
+Now you can use AxesHelper in your javascript code. See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/isdoc/AxesHelper/index.html) for details.
 
 ## On the following browsers have been successfully tested:
 
