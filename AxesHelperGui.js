@@ -1,8 +1,7 @@
 /**
  * @module AxesHelperGui
- * @description Adds AxesHelper settings folder into dat.gui.
+ * @description Adds AxesHelper settings folder into {@link https://github.com/anhr/dat.gui|dat.gui}.
  * @see {@link https://github.com/anhr/AxesHelper|AxesHelper}
- * @see {@link https://github.com/anhr/dat.gui|dat.gui}
  *
  * @author {@link https://anhr.github.io/AboutMe/|Andrej Hristoliubov}
  *
@@ -60,7 +59,7 @@ import clearThree from '../../commonNodeJS/master/clearThree.js';//https://githu
  * @param {number} [options.scales.axisName.max] Maximum range of the y axis. Default is 1.
  * @param {number} [options.scales.axisName.marks] Number of y scale marks. Default is undefined no marks.
 *
- * @param {object} [options.scaales.text] followed options of the text of the marks is available
+ * @param {object} [options.scales.text] followed options of the text of the marks is available
  * @param {boolean} [options.scales.text.precision] Formats a scale marks into a specified length. Default is 4
  * @param {number} [options.scales.text.textHeight] The height of the text. Default is 0.1.
  * @param {object} [options.scales.text.rect] rectangle around the text.

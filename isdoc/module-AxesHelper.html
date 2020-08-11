@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: AxesHelperGui</title>
+    <title>JSDoc: Module: AxesHelper</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: AxesHelperGui</h1>
+    <h1 class="page-title">Module: AxesHelper</h1>
 
     
 
@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description">Adds AxesHelper settings folder into dat.gui.</div>
+            <div class="description">An axis object to visualize the 1, 2 or 3 axes.</div>
         
 
         
@@ -100,21 +100,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AxesHelperGui.js.html">AxesHelperGui.js</a>, <a href="AxesHelperGui.js.html#line1">line 1</a>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://github.com/anhr/AxesHelper">AxesHelper</a></li>
-        
-            <li><a href="https://github.com/anhr/dat.gui">dat.gui</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -166,12 +157,16 @@
     
 
     
-    <h4 class="name" id=".AxesHelperGui"><span class="type-signature">(static) </span>AxesHelperGui<span class="signature">(group, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".AxesHelper"><span class="type-signature">(static) </span>AxesHelper<span class="signature">(THREE, group, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    An axis object to visualize the 1, 2 or 3 axes.
+</div>
 
 
 
@@ -208,13 +203,47 @@
 
         <tr>
             
+                <td class="name"><code>THREE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><a href="https://github.com/anhr/three.js">THREE</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>group</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">any</span>
+<span class="param-type">THREE.Group</span>
+|
+
+<span class="param-type">THREE.Scene</span>
 
 
             
@@ -352,35 +381,47 @@
 
             
 
-            <td class="description last">axes scales. Default is {}
-                <h6>Properties</h6>
-                
+            <td class="description last">axes scales. Default is {}</td>
+        </tr>
 
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>axisName</code></td>
+                <td class="name"><code>groupMove</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Group</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">group of the meshes you have added to the scene.Scales of the axes is depending from scale, position and rotation of this group. Default is group.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scales.axisName</code></td>
             
 
             <td class="type">
@@ -636,17 +677,10 @@
         </tr>
 
     
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
 
         <tr>
             
-                <td class="name"><code>scaales.text</code></td>
+                <td class="name"><code>scales.text</code></td>
             
 
             <td class="type">
@@ -672,14 +706,35 @@
 
             
 
-            <td class="description last">followed options of the text of the marks is available</td>
-        </tr>
+            <td class="description last">followed options of the text of the marks is available
+                <h6>Properties</h6>
+                
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>scales.text.precision</code></td>
+                <td class="name"><code>precision</code></td>
             
 
             <td class="type">
@@ -712,7 +767,7 @@
 
         <tr>
             
-                <td class="name"><code>scales.text.textHeight</code></td>
+                <td class="name"><code>textHeight</code></td>
             
 
             <td class="type">
@@ -745,7 +800,7 @@
 
         <tr>
             
-                <td class="name"><code>scales.text.rect</code></td>
+                <td class="name"><code>rect</code></td>
             
 
             <td class="type">
@@ -846,106 +901,7 @@
 
         <tr>
             
-                <td class="name"><code>guiParams.axesHelperFolder</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">AxesHelper folder name. Default is lang.axesHelper</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options.cookie</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Cookie</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Your custom cookie function for saving and loading of the AxesHelper settings. Default cookie is not saving settings.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options.cookieName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Name of the cookie is "AxesHelper" + options.cookieName. Default is undefined.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options.camera</code></td>
+                <td class="name"><code>camera</code></td>
             
 
             <td class="type">
@@ -972,6 +928,13 @@
             
 
             <td class="description last">camera.Set the camera if you want to see text size is independent from camera.fov. The text height will be calculated as textHeight = camera.fov * textHeight / 50See https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera.fov about camera.fov.Default is undefined. Default camera.fov is 50.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1012,7 +975,705 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AxesHelperGui.js.html">AxesHelperGui.js</a>, <a href="AxesHelperGui.js.html#line76">line 76</a>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.createAxis"><span class="type-signature">(inner) </span>this.createAxis<span class="signature">(axisName)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    create axis
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>axisName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">axis name</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line110">line 110</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.exposePosition"><span class="type-signature">(inner) </span>this.exposePosition<span class="signature">(pointVertice)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Expose position on axes.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pointVertice</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Vector3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">position</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line583">line 583</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.exposePosition"><span class="type-signature">(inner) </span>this.exposePosition<span class="signature">(intersection)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Expose position on axes.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>intersection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Vector3</span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">position or intersection. See <a href="https://threejs.org/docs/index.html#api/en/core/Raycaster">Raycaster</a> for detail.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line598">line 598</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.getGroup"><span class="type-signature">(inner) </span>this.getGroup<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    get group
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line637">line 637</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <a href="https://threejs.org/docs/index.html#api/en/objects/Group">Group</a>
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.getTHREE"><span class="type-signature">(inner) </span>this.getTHREE<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    get THREE
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line629">line 629</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <a href="https://github.com/anhr/three.js">THREE</a>
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~this.updateAxes"><span class="type-signature">(inner) </span>this.updateAxes<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    update axes
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AxesHelper.js.html">AxesHelper.js</a>, <a href="AxesHelper.js.html#line645">line 645</a>
     </li></ul></dd>
     
 
@@ -1058,13 +1719,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AxesHelperGui.html">AxesHelperGui</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AxesHelper.html">AxesHelper</a></li><li><a href="module-AxesHelperGui.html">AxesHelperGui</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Aug 10 2020 21:58:04 GMT+0700 (Красноярск, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Aug 11 2020 07:22:28 GMT+0700 (Красноярск, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>
