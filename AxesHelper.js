@@ -68,7 +68,7 @@ export function AxesHelper( THREE, group, options ) {
 	};
 
 	options.scales = options.scales || {};
-	options.scales.display = options.scales.display !== undefined ? options.scales.display : false;
+	options.scales.display = options.scales.display !== undefined ? options.scales.display : true;
 	options.scales.text = options.scales.text || {};
 //	options.scales.text.precision = options.scales.text.precision || 4;
 //	options.scales.text.textHeight = options.scales.text.textHeight || 0.1;
