@@ -45,7 +45,7 @@ import clearThree from '../../commonNodeJS/master/clearThree.js';//https://githu
 
 
 /**
- * 
+ * Adds AxesHelper settings folder into {@link https://github.com/anhr/dat.gui|dat.gui}.
  * @param {any} group THREE group or scene
  * @param {object} [options] followed options is available
  * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.

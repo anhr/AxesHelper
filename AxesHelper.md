@@ -2,15 +2,21 @@
 
 An axis object to visualize the 1, 2 or 3 axes.
 
-I use AxesHelper in my [three.js](https://threejs.org/) projects for displaying of the axes in canvas.
-[Example 1](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelper.html).
-[Example 2](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelperGui.html).
+## Quick start
 
-Uses in my projects:
- * [AxesHelper](https://github.com/anhr/AxesHelper)
- * [myThreejs](https://github.com/anhr/myThreejs)
+### AxesHelper.
 
-See [SpriteText API](https://raw.githack.com/anhr/SpriteText/master/jsdoc/index.html) for details.
+The easiest way to use AxesHelper in your code is import AxesHelper from AxesHelper.js file in your JavaScript module.
+[Example](https://github.com/anhr/AxesHelper/blob/master/Examples/AxesHelper.html)
+```
+import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
+```
+or
+```
+import { AxesHelper } from './AxesHelper.js';
+```
+
+Now you can use AxesHelper in your javascript code. See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/isdoc/index.html) for details.
 
 ## On the following browsers have been successfully tested:
 
