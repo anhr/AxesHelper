@@ -19,7 +19,7 @@ import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/Sprit
 import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
 
 //import { getObjectPosition } from '../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
-import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+import { getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
 
 /**
