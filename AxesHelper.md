@@ -32,7 +32,7 @@ import * as THREE from './three.js/dev/build/three.module.js';
 import { AxesHelper } from './AxesHelper/master/AxesHelper.js';
 ```
 
-Now you can use AxesHelper in your javascript code. See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/isdoc/index.html) for details.
+Now you can use AxesHelper in your javascript code.
 
 ## On the following browsers have been successfully tested:
 

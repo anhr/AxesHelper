@@ -10,7 +10,7 @@ Uses in my projects:
  * [AxesHelper](https://github.com/anhr/AxesHelper)
  * [myThreejs](https://github.com/anhr/myThreejs)
 
-See [SpriteText API](https://raw.githack.com/anhr/SpriteText/master/jsdoc/index.html) for details.
+See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/jsdoc/index.html) for details.
 
 ## On the following browsers have been successfully tested:
 
