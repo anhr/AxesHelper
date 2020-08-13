@@ -12,8 +12,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0
 */
 
-import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
-//import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+//import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
 //import clearThree from '../../commonNodeJS/master/clearThree.js';//https://github.com/anhr/commonNodeJS
 import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
