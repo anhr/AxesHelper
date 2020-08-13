@@ -75,13 +75,11 @@ export function AxesHelper( THREE, group, options ) {
 	options.scales.text.rect = options.scales.text.rect || {};
 	options.scales.text.rect.displayRect = options.scales.text.rect.displayRect !== undefined ? options.scales.text.rect.displayRect : true;
 	options.scales.text.rect.borderRadius = options.scales.text.rect.borderRadius !== undefined ? options.scales.text.rect.borderRadius : 15;
-	var axesCount = 0;
 	function scaleOptions( axisName ) {
 
 		const scale = options.scales[axisName];
 		if ( !scale )
 			return;
-		axesCount++;
 		if ( scale.min === undefined ) scale.min = - 1;
 		if ( scale.max === undefined ) scale.max = 1;
 		if ( scale.marks === undefined ) scale.marks = 3;
@@ -92,8 +90,6 @@ export function AxesHelper( THREE, group, options ) {
 	scaleOptions('x');
 	scaleOptions('y');
 	scaleOptions('z');
-	if( axesCount === 0 )
-		console.warn( 'AxesHelper: Define at least one axis.' )
 
 	this.options = options;
 
@@ -374,6 +370,8 @@ sprite.scale.y /= 2;
 	this.createAxis( 'x' );
 	this.createAxis( 'y' );
 	this.createAxis( 'z' );
+	if( groupAxesHelper.children.length === 0 )
+		console.warn( 'AxesHelper: Define at least one axis.' )
 
 //	updateSpriteTextGroup( groupAxesHelper );
 
