@@ -34,6 +34,58 @@ import { AxesHelper } from './AxesHelper/master/AxesHelper.js';
 
 Now you can use AxesHelper in your javascript code.
 
+The simplest AxesHelper has at least one axis.
+```
+new AxesHelper( THREE, scene, { scales: { x: {} } } );
+```
+
+Now we want to create AxesHelper 3 dimensional axes.
+
+Name of the X is 'time'. Number of X scale marks is 5.
+
+Minimum Y is 0.
+Please edit line above for it.
+```
+new AxesHelper( THREE, scene, {
+
+	scales: {
+
+		x: {
+		
+			name: 'time',
+			marks: 5
+		
+		},
+		y: {
+		
+			min: 0,
+		
+		},
+		z: {}
+
+	}
+
+} );
+```
+Currently the z axis is exists but not visible. Move camera for resolving of issue.
+```
+camera.position.copy( new THREE.Vector3( 0.4, 0.4, 2 ) );
+camera.rotation.set( -0.1973955598498808, 0.19365830044432672, 0.03847102740732835 );
+```
+You can use the [THREE.OrbitControls](https://threejs.org/docs/index.html#examples/en/controls/OrbitControls) to rotate the camera.
+Import OrbitControls,
+```
+import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
+```
+and edit your code
+```
+//camera.rotation.set( -0.1973955598498808, 0.19365830044432672, 0.03847102740732835 );
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.z * 2 );
+controls.update();
+```
+
+
 ## On the following browsers have been successfully tested:
 
 Windows 10

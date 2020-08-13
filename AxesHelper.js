@@ -38,7 +38,7 @@ import { getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/mas
  * @param {string} [options.scales.axisName.name] axis name. Default is axisName.
  * @param {number} [options.scales.axisName.min] Minimum range of the y axis. Default is -1.
  * @param {number} [options.scales.axisName.max] Maximum range of the y axis. Default is 1.
- * @param {number} [options.scales.axisName.marks] Number of y scale marks. Default is undefined no marks.
+ * @param {number} [options.scales.axisName.marks] Number of scale marks. Default is undefined no marks.
 *
  * @param {object} [options.scales.text] followed options of the text of the marks is available
  * @param {boolean} [options.scales.text.precision] Formats a scale marks into a specified length. Default is 4
