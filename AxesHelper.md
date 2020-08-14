@@ -86,7 +86,7 @@ controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.
 controls.update();
 ```
 
-See "Raycaster" list item if the [StereoEffect](../../../commonNodeJS/master/StereoEffect/jsdoc)
+See "Raycaster" list item if the [StereoEffect](../../../commonNodeJS/master/StereoEffect/jsdoc/index.html)
 
 ### AxesHelperGui
 
