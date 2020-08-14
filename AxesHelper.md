@@ -73,6 +73,7 @@ camera.position.copy( new THREE.Vector3( 0.4, 0.4, 2 ) );
 camera.rotation.set( -0.1973955598498808, 0.19365830044432672, 0.03847102740732835 );
 ```
 You can use the [THREE.OrbitControls](https://threejs.org/docs/index.html#examples/en/controls/OrbitControls) to rotate the camera.
+
 Import OrbitControls,
 ```
 import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
@@ -85,6 +86,67 @@ controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.
 controls.update();
 ```
 
+See "Raycaster" list item if the [StereoEffect](../../../commonNodeJS/master/StereoEffect/jsdoc)
+
+### AxesHelperGui
+
+Add AxesHelperGui into [dat.gui](https://github.com/anhr/dat.gui) for manual change settings of the AxesHelper.
+[Example](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelperGui.html)
+
+Import dat.gui.
+```
+import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
+```
+or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
+```
+import { dat } from './commonNodeJS/master/dat/dat.module.js';
+```
+Import AxesHelperGui.
+```
+import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
+```
+or
+
+* Use folder on your localhost named as [folderName]. See AxesHelper above.
+* Download [AxesHelper](https://github.com/anhr/AxesHelper) repository into your "[folderName]\AxesHelper\master" folder.
+```
+import { AxesHelperGui } from './AxesHelper/master/AxesHelperGui.js';
+```
+
+Now you can use SpriteTextGui in your javascript code.
+```
+const gui =  new dat.GUI();
+const folder = SpriteTextGui( SpriteText, gui, spriteText, {
+
+	//getLanguageCode: getLanguageCode,
+	//cookie: cookie,
+
+} );
+```
+If you want to localize the gui, please uncomment
+```
+getLanguageCode: getLanguageCode,
+```
+line above and import getLanguageCode.
+```
+import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
+```
+or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
+```
+import { getLanguageCode } from './commonNodeJS/master/lang.js';
+```
+If you want save a custom SpriteText settings to the cookie, please uncomment
+```
+cookie: cookie,
+```
+line in the SpriteTextGui.gui(...) above and import cookie.
+```
+import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+```
+or download [cookieNodeJS](https://github.com/anhr/cookieNodeJS) repository into your "[folderName]\cookieNodeJS\master" folder.
+```
+import cookie from './cookieNodeJS/master/cookie.js';
+```
 
 ## On the following browsers have been successfully tested:
 
