@@ -28,8 +28,8 @@ import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 //import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
 import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
-//import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
-import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
+import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
+//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
 //import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';

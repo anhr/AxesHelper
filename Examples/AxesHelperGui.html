@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -62,14 +62,14 @@
 		//import { SpriteTextGui } from '../../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
 		//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
-		//import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
-		import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+		import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
+		//import { GuiSelectPoint } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
 		//import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
 		import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
 
-		//import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
-		import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+		import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
+		//import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
 
 		var camera, scene, renderer, stereoEffect, axesHelper, controls, intersects, guiSelectPoint, moveGroup, raycaster;
 		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;//raycaster = new THREE.Raycaster() 
@@ -208,6 +208,7 @@
 //					vertexColors: THREE.VertexColors
 
 				} ) );
+			groupMove.add( points );
 			points.position.copy( new THREE.Vector3( 0.1, 0, 0 ) );
 //			points.material.color.set( 0xff0000 );
 //			points.geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( [1,1,1], 3 ) );
@@ -328,7 +329,7 @@
 
 				stereoEffect = new StereoEffect( THREE, renderer, {
 
-					spatialMultiplex: spatialMultiplexsIndexs.Mono,
+					//spatialMultiplex: spatialMultiplexsIndexs.Mono,
 					far: camera.far,
 					camera: camera,
 					cookie: cookie,
@@ -404,7 +405,7 @@
 
 				if ( typeof GuiSelectPoint !== "undefined" ) {
 
-					GuiSelectPoint.setTHREE( THREE );
+//					GuiSelectPoint.setTHREE( THREE );
 					
 					guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
 					guiSelectPoint.add( gui, {

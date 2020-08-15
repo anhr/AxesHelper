@@ -18,8 +18,8 @@ import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/Sprit
 //import clearThree from '../../commonNodeJS/master/clearThree.js';//https://github.com/anhr/commonNodeJS
 import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
 
-//import { getObjectPosition } from '../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
-import { getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+//import { GuiSelectPoint, getObjectPosition } from '../../commonNodeJS/master/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
+import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
 
 
 /**
@@ -52,6 +52,15 @@ import { getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/mas
 */
 export function AxesHelper( THREE, group, options ) {
 
+	//Этот вызов нужен на случай, когда в приложении import из guiSelectPoint.js происходит из разных файлов. Например
+	//В одном месте
+	//import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+	//а в другом месте
+	//import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint.js';
+	//Тогда в приложении будет два экземпляра guiSelectPoint.js
+	//Для обоих экземпляров guiSelectPoint.js надо установить отдельный THREE
+	GuiSelectPoint.setTHREE( THREE );
+	
 	const axesHelper = this;
 
 	SpriteText.setTHREE( THREE );

@@ -46,7 +46,7 @@ Name of the X is 'time'. Number of X scale marks is 5.
 Minimum Y is 0.
 Please edit line above for it.
 ```
-new AxesHelper( THREE, scene, {
+const axesHelper = new AxesHelper( THREE, scene, {
 
 	scales: {
 
@@ -86,7 +86,155 @@ controls.target.set( scene.position.x * 2, scene.position.y * 2, scene.position.
 controls.update();
 ```
 
-See "Raycaster" list item if the [StereoEffect](../../../commonNodeJS/master/StereoEffect/jsdoc/index.html)
+You can use [Raycaster](https://threejs.org/docs/index.html#api/en/core/Raycaster) for mouse picking (working out what objects in the 3d space the mouse is over).
+
+Please create an 3D object, for example points.
+```
+const points = new THREE.Points( new THREE.BufferGeometry().setFromPoints( [
+		new THREE.Vector3( 0.5, 0.5 ,0.5 ),
+		new THREE.Vector3( -0.4, -0.5 ,-0.5 )
+	] ),
+	new THREE.PointsMaterial( {
+
+		color: 0xffffff,
+		size: 5,//0.05,
+		sizeAttenuation: false,
+		alphaTest: 0.5,
+
+	} ) );
+scene.add( points );
+```
+Import [StereoEffect](https://github.com/anhr/commonNodeJS/blob/master/StereoEffect/README.md).
+```
+import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+```
+or 
+download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
+```
+import { StereoEffect, spatialMultiplexsIndexs } from './commonNodeJS/master/StereoEffect/StereoEffect.js';
+```
+
+* Create the StereoEffect instance.
+```
+const stereoEffect = new StereoEffect( THREE, renderer, {
+
+	//spatialMultiplex: spatialMultiplexsIndexs.SbS,//Side by side stereo effect
+	far: camera.far,
+	camera: camera,
+
+} );
+stereoEffect.setSize( window.innerWidth, window.innerHeight );
+```
+Add code into animate function
+```
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	if ( stereoEffect === undefined )
+		renderer.render( scene, camera );
+	else stereoEffect.render( scene, camera );
+
+}
+```
+
+Get default cursor
+```
+const cursor = renderer.domElement.style.cursor;
+```
+Define of the actions for objects in the 3d space the mouse is over.
+```
+function getIntersectionPosition( intersection )
+	{ return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize ); }
+points.userData.raycaster = {
+
+	onIntersection: function ( intersection ) {
+
+		renderer.domElement.style.cursor = 'pointer';
+
+	},
+	onIntersectionOut: function ( ) {
+
+		renderer.domElement.style.cursor = cursor;
+
+	},
+	onMouseDown: function ( intersect ) {
+
+		axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+
+	}
+
+}
+```
+
+Create the THREE.Raycaster instance.
+```
+const raycaster = new THREE.Raycaster();
+
+//the precision of the raycaster when intersecting objects, in world units.
+//See https://threejs.org/docs/#api/en/core/Raycaster.params.
+raycaster.params.Points.threshold = 0.1;
+
+raycaster.setStereoEffect( {
+
+	renderer: renderer,
+	camera: camera,
+	stereoEffect: stereoEffect,
+	onIntersection: function ( intersects, mouse ) {
+
+		var intersection = intersects[0];
+		if (
+			( intersection.object.userData.raycaster !== undefined )
+			&& ( intersection.object.userData.raycaster.onIntersection !== undefined ) ) {
+
+			intersection.object.userData.raycaster.onIntersection( intersection );
+
+		}
+
+	},
+	onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
+	onMouseDown: function ( intersects ) {
+
+		var intersection = intersects[0];
+		if (
+			( intersection.object.userData.raycaster !== undefined )
+			&& ( intersection.object.userData.raycaster.onMouseDown !== undefined ) ) {
+
+			intersection.object.userData.raycaster.onMouseDown( intersection );
+
+		}
+
+	}
+
+} );
+raycaster.stereo.addParticle( points );
+```
+Add event listeners.
+```
+const mouse = new THREE.Vector2();
+window.addEventListener( 'mousemove', function( event ) {
+
+	// calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	// update the picking ray with the camera and mouse position
+	raycaster.setFromCamera( mouse, camera );
+
+	raycaster.stereo.onDocumentMouseMove( event );
+
+}, false );
+window.addEventListener( 'mousedown', function( event ) {
+
+	raycaster.stereo.onDocumentMouseDown( event );
+
+}, false );
+```
+For testing please move cursor over point. Cursor will be changing to 'pointer'.
+
+You can see a dot lines from point to axes if you click over point.
 
 ### AxesHelperGui
 
@@ -107,21 +255,33 @@ import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/Ax
 ```
 or
 
-* Use folder on your localhost named as [folderName]. See AxesHelper above.
 * Download [AxesHelper](https://github.com/anhr/AxesHelper) repository into your "[folderName]\AxesHelper\master" folder.
 ```
 import { AxesHelperGui } from './AxesHelper/master/AxesHelperGui.js';
 ```
 
-Now you can use SpriteTextGui in your javascript code.
+Now you can use AxesHelperGui in your javascript code.
 ```
 const gui =  new dat.GUI();
-const folder = SpriteTextGui( SpriteText, gui, spriteText, {
+AxesHelperGui( axesHelper, gui, {
 
-	//getLanguageCode: getLanguageCode,
 	//cookie: cookie,
+	//getLanguageCode: getLanguageCode,
 
 } );
+```
+Now you can see the "Axes Helper" folder in the dat.gui.
+
+Add a select point gui.
+```
+const guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
+guiSelectPoint.add( gui, {
+
+	//cookie: cookie,
+	//getLanguageCode: getLanguageCode,
+
+} );
+guiSelectPoint.addMesh( points );
 ```
 If you want to localize the gui, please uncomment
 ```
