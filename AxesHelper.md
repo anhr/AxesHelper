@@ -50,6 +50,20 @@ const axesHelper = new AxesHelper( THREE, scene, {
 
 	scales: {
 
+		text: {
+
+			//Please specify the textHeight if you want the changing of the text height is available in gui.
+			//Default textHeight is 0.04
+			textHeight: 0.04,
+
+			//fov: camera.fov,
+
+			//Precision of the scale marks is 3 digit.
+			//Please specify the precision if you want the changing of the precision is available in gui.
+			//Default precision is 4.
+			precision: 3,
+
+		},
 		x: {
 		
 			name: 'time',
@@ -203,6 +217,8 @@ raycaster.setStereoEffect( {
 			intersection.object.userData.raycaster.onMouseDown( intersection );
 
 		}
+		if ( typeof guiSelectPoint !== 'undefined' )
+			guiSelectPoint.select( intersection );
 
 	}
 
@@ -272,7 +288,32 @@ AxesHelperGui( axesHelper, gui, {
 ```
 Now you can see the "Axes Helper" folder in the dat.gui.
 
-Add a select point gui.
+If you want to localize the gui, please uncomment
+```
+getLanguageCode: getLanguageCode,
+```
+line above and import getLanguageCode.
+```
+import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
+```
+or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
+```
+import { getLanguageCode } from './commonNodeJS/master/lang.js';
+```
+If you want save a custom SpriteText settings to the cookie, please uncomment
+```
+cookie: cookie,
+```
+line in the SpriteTextGui.gui(...) above and import cookie.
+```
+import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+```
+or download [cookieNodeJS](https://github.com/anhr/cookieNodeJS) repository into your "[folderName]\cookieNodeJS\master" folder.
+```
+import cookie from './cookieNodeJS/master/cookie.js';
+```
+
+Add [guiSelectPoint](../../../commonNodeJS/master/guiSelectPoint/jsdoc/index.html) into [dat.gui](https://github.com/anhr/dat.gui) for select a point from the mesh.
 ```
 const guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
 guiSelectPoint.add( gui, {
