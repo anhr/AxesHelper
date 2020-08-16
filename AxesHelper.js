@@ -106,7 +106,7 @@ export function AxesHelper( THREE, group, options ) {
 	groupAxesHelper.userData.optionsSpriteText = {
 
 		fontColor: options.color,
-		//textHeight: options.scales.text.textHeight,
+		textHeight: options.scales.text.textHeight,
 //		fov: options.scales.text.fov,
 		fov: options.camera.fov,
 		rect: options.scales.text.rect,
