@@ -7,7 +7,6 @@ I use AxesHelper in my [three.js](https://threejs.org/) projects for displaying 
 [Example 2](https://raw.githack.com/anhr/AxesHelper/master/Examples/AxesHelperGui.html).
 
 Uses in my projects:
- * [AxesHelper](https://github.com/anhr/AxesHelper)
  * [myThreejs](https://github.com/anhr/myThreejs)
 
 See [AxesHelper API](https://raw.githack.com/anhr/AxesHelper/master/jsdoc/index.html) for details.
