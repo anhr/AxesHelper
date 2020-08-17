@@ -314,73 +314,49 @@ import cookie from './cookieNodeJS/master/cookie.js';
 ```
 
 Add [guiSelectPoint](../../../commonNodeJS/master/guiSelectPoint/jsdoc/index.html) into [dat.gui](https://github.com/anhr/dat.gui) for select a point from the mesh.
-```
-const guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
-guiSelectPoint.add( gui, {
 
-	//cookie: cookie,
-	//getLanguageCode: getLanguageCode,
+Sometimes you need to move a group of meshes for better visualization. Use [MoveGroup](../../../commonNodeJS/master/MoveGroup.js) for it.
 
-} );
-guiSelectPoint.addMesh( points );
+Import MoveGroup.
 ```
-If you want to localize the gui, please uncomment
-```
-getLanguageCode: getLanguageCode,
-```
-line above and import getLanguageCode.
-```
-import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
+import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
 ```
 or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
 ```
-import { getLanguageCode } from './commonNodeJS/master/lang.js';
+import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';
 ```
-If you want save a custom SpriteText settings to the cookie, please uncomment
 ```
-cookie: cookie,
+const moveGroup = new MoveGroup( scene, {
+
+	//cookie: cookie,
+	axesHelper: axesHelper,
+
+} );
+moveGroup.gui( gui, {
+
+	//getLanguageCode: getLanguageCode,
+	lang: { moveGroup: 'Move points', },//name of the moveGroup folder. Default is 'Move Group'
+	guiSelectPoint: guiSelectPoint,
+
+} );
 ```
-line in the SpriteTextGui.gui(...) above and import cookie.
+Now you can move, scale and rotate the scene. Unfortunately, you also move the axes.
+For resolving of the issue, ñreate groupMove and move all your meshs from scene to groupMove.
 ```
-import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+const groupMove = new THREE.Group();
+scene.add( groupMove );
+
+//Remove points from scene
+//scene.add( points );
+
+groupMove.add( points );
 ```
-or download [cookieNodeJS](https://github.com/anhr/cookieNodeJS) repository into your "[folderName]\cookieNodeJS\master" folder.
+Move groupMove instead of the scene. Replace scene to groupMove in the new MoveGroup
 ```
-import cookie from './cookieNodeJS/master/cookie.js';
+const moveGroup = new MoveGroup( groupMove, {
+
+	//cookie: cookie,
+	axesHelper: axesHelper,
+
+} );
 ```
-
-## On the following browsers have been successfully tested:
-
-Windows 10
-
-	IE 11 Fatal error: Your browser do not support modular JavaScript code
-
-	Microsoft Edge 44
-
-	Chrome 83
-
-	Opera 68
-
-	Safari 5.1.7 Fatal error: Your browser do not support modular JavaScript code
-
-	FireFox 72
-
-Android 6.0.1
-
-	Chrome 83
-
-	Samsung Internet 12
-
-	FireFox 68
-
-	Opera 59
-
-	Opera Mini 50
-
-LG Smart tv
-
-	Chrome - Fatal error: Your browser do not support modular JavaScript code
-
-
- ## Have a job for me?
-Please read [About Me](https://anhr.github.io/AboutMe/).

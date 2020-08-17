@@ -68,31 +68,33 @@ import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.mo
 
 /**
  * Adds AxesHelper settings folder into {@link https://github.com/anhr/dat.gui|dat.gui}.
- * @param {any} group THREE group or scene
- * @param {object} [options] followed options is available
- * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.
- * @param {number} [options.scales] axes scales. Default is {}
- * 
- * @param {number} [options.scales.axisName] x or y or z
- * @param {number} [options.scales.axisName.zoomMultiplier] zoom multiplier. Default is 1.1
- * @param {number} [options.scales.axisName.offset] position offset. Default is 0.1
- * @param {string} [options.scales.axisName.name] axis name. Default is axisName.
- * @param {number} [options.scales.axisName.min] Minimum range of the y axis. Default is -1.
- * @param {number} [options.scales.axisName.max] Maximum range of the y axis. Default is 1.
- * @param {number} [options.scales.axisName.marks] Number of scale marks. Default is undefined no marks.
-*
- * @param {object} [options.scales.text] followed options of the text of the marks is available
- * @param {boolean} [options.scales.text.precision] Formats a scale marks into a specified length. Default is 4
- * @param {number} [options.scales.text.textHeight] The height of the text. Default is 0.1.
- * @param {object} [options.scales.text.rect] rectangle around the text.
- * @param {boolean} [options.scales.text.rect.displayRect] true - the rectangle around the text is visible. Default is true.
+ * @param {AxesHelper} axesHelper is [new AxesHelper(...)]{@link https://raw.githack.com/anhr/AxesHelper/master/jsdoc/module-AxesHelper.html}.
+ * An axis object to visualize axes.
+ * @param {GUI} gui is [new dat.GUI(...)]{@link https://github.com/anhr/dat.gui}.
+ * @param {object} [guiParams] Followed parameters is allowed. Default is no parameters.
+ * @param {Function} [guiParams.getLanguageCode] Your custom getLanguageCode() function.
+ * returns the "primary language" subtag of the language version of the browser.
+ * Examples: "en" - English language, "ru" Russian.
+ * See the "Syntax" paragraph of RFC 4646 {@link https://tools.ietf.org/html/rfc4646#section-2.1|rfc4646 2.1 Syntax} for details.
+ * Default returns the 'en' is English language.
+ * You can import { getLanguageCode } from '../../commonNodeJS/master/lang.js';
+ * @param {object} [guiParams.lang] Object with localized language values
  * @param {string} [guiParams.axesHelperFolder] AxesHelper folder name. Default is lang.axesHelper
- * @param {Cookie} [options.cookie] Your custom cookie function for saving and loading of the AxesHelper settings. Default cookie is not saving settings.
- * @param {string} [options.cookieName] Name of the cookie is "AxesHelper" + options.cookieName. Default is undefined.
- * @param {THREE.PerspectiveCamera} [options.camera] camera.
- * Set the camera if you want to see text size is independent from camera.fov. The text height will be calculated as textHeight = camera.fov * textHeight / 50
- * See https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera.fov about camera.fov.
- * Default is undefined. Default camera.fov is 50.
+ * @param {cookie} [guiParams.cookie] Your custom cookie function for saving and loading of the AxesHelper settings.
+ * See [cookieNodeJS]{@link https://github.com/anhr/cookieNodeJS}.
+ * Default cookie is not saving settings.
+ * @param {string} [guiParams.cookieName] Name of the cookie is "AxesHelper" + guiParams.cookieName. Default is undefined.
+ * @example
+AxesHelperGui( axesHelper, gui, {
+
+	cookie: cookie,
+	cookieName: 'mySettings',
+
+	//Localize of the scales folder to Azerbaijani language
+	getLanguageCode: function() { return 'az'; },
+	lang: { scales: 'tərəzi', languageCode: 'az' },
+
+} );
 */
 export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
@@ -277,6 +279,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 			function zoom( zoom, action ) {
 
+/*
 				var axesHelper = guiParams.axesHelper;
 
 				function axesZoom( axes, scaleControllers, windowRange ) {
@@ -299,6 +302,24 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 				if ( axesHelper !== undefined )
 					axesHelper.updateDotLines();
+*/
+				function axesZoom( axes, scaleControllers ) {
+
+					if ( axes === undefined )
+						return;//not 3D axesHelper
+
+					axes.min = action( axes.min, zoom );
+					scaleControllers.min.setValue( axes.min );
+
+					axes.max = action( axes.max, zoom );
+					scaleControllers.max.setValue( axes.max );
+					scaleControllers.onchangeWindowRange();
+
+				}
+
+				axesZoom( options.scales.x, scalesControllers.x );
+				axesZoom( options.scales.y, scalesControllers.y );
+				axesZoom( options.scales.z, scalesControllers.z );
 
 			}
 			zoom( customController.controller.getValue(), action );
@@ -358,9 +379,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 			scaleControllers.max.setValue( axes.max );
 
 			onchangeWindowRange( windowRange, axes );
-
+/*
 			if ( guiParams.axesHelper !== undefined )
 				guiParams.axesHelper.updateDotLines();
+*/
 
 		}
 
@@ -446,9 +468,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 				}
 
 				onchangeWindowRange( windowRange, axes );
-
+/*
 				if ( guiParams.axesHelper !== undefined )
 					guiParams.axesHelper.updateDotLines();
+*/
 
 			},
 
@@ -463,36 +486,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 		setSettings();
 
 	}
-/*		
-	function s( axisName ) {
-
-		if ( options.scales[axisName] !== undefined )	
-			scale( axisName, options.scales[axisName], windowRange, scalesControllers[axisName], optionsDefault.scales[axisName] );
-			
-	}
-	s('x');
-	s('y');
-	s('z');
-	s('w');
-*/		
 	scale('x');
 	scale('y');
 	scale('z');
 //	scale('w');
-/*		
-	scale( options.scales.x,
-		guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeX,
-		scalesControllers.x, optionsDefault.scales.x );
-	scale( options.scales.y,
-		guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeY,
-		scalesControllers.y, optionsDefault.scales.y );
-	scale( options.scales.z,
-		guiParams.axesHelper === undefined ? windowRange : guiParams.axesHelper.windowRangeZ,
-		scalesControllers.z, optionsDefault.scales.z );
-	if ( options.scales.w !== undefined ) {
-		scale( options.scales.w, windowRange, scalesControllers.w, optionsDefault.scales.w );
-	}
-*/		
 
 
 	//default button
@@ -551,7 +548,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Aug 17 2020 05:46:16 GMT+0700 (Красноярск, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Aug 18 2020 02:10:13 GMT+0700 (Красноярск, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

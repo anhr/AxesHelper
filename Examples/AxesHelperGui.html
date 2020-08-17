@@ -41,8 +41,8 @@
 		//import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
 		import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
 
-		//import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
-		import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
+		import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
+		//import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
 		
 		//import { OrbitControls } from '../../../three.js/dev/examples/jsm/controls/OrbitControls.js';//https://github.com/anhr/three.js
 		import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
@@ -65,8 +65,8 @@
 		//import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint/guiSelectPoint.js';//https://github.com/anhr/commonNodeJS
 		import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint/guiSelectPoint.js';
 
-		//import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
-		import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
+		import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
+		//import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
 
 		//import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
 		import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
@@ -159,7 +159,7 @@
 
 			if ( typeof AxesHelper !== "undefined" ) {
 
-				axesHelper = new AxesHelper ( THREE, scene.add( new THREE.Group() ), {
+				axesHelper = new AxesHelper ( THREE, scene, {
 
 						//colors: colorsHelper / 0xff, //gray axes
 						color: 'rgba(255, 255, 255, 0.5)',
@@ -186,7 +186,7 @@
 
 				moveGroup = new MoveGroup( groupMove, {
 
-					scales: scales,
+					//scales: scales,
 					cookie: cookie,
 //				cookieName: getCanvasName(),
 					axesHelper: axesHelper,

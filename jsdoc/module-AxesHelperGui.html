@@ -164,7 +164,7 @@
     
 
     
-    <h4 class="name" id=".AxesHelperGui"><span class="type-signature">(static) </span>AxesHelperGui<span class="signature">(group, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".AxesHelperGui"><span class="type-signature">(static) </span>AxesHelperGui<span class="signature">(axesHelper, gui, guiParams<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -210,13 +210,13 @@
 
         <tr>
             
-                <td class="name"><code>group</code></td>
+                <td class="name"><code>axesHelper</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">any</span>
+<span class="param-type">AxesHelper</span>
 
 
             
@@ -234,20 +234,20 @@
 
             
 
-            <td class="description last">THREE group or scene</td>
+            <td class="description last">is <a href="https://raw.githack.com/anhr/AxesHelper/master/jsdoc/module-AxesHelper.html">new AxesHelper(...)</a>.An axis object to visualize axes.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>gui</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">GUI</span>
 
 
             
@@ -255,8 +255,6 @@
 
             
                 <td class="attributes">
-                
-                    &lt;optional><br>
                 
 
                 
@@ -267,35 +265,14 @@
 
             
 
-            <td class="description last">followed options is available
-                <h6>Properties</h6>
-                
+            <td class="description last">is <a href="https://github.com/anhr/dat.gui">new dat.GUI(...)</a>.</td>
+        </tr>
 
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>color</code></td>
+                <td class="name"><code>guiParams</code></td>
             
 
             <td class="type">
@@ -321,40 +298,7 @@
 
             
 
-            <td class="description last">axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>scales</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">axes scales. Default is {}
+            <td class="description last">Followed parameters is allowed. Default is no parameters.
                 <h6>Properties</h6>
                 
 
@@ -382,13 +326,13 @@
 
         <tr>
             
-                <td class="name"><code>axisName</code></td>
+                <td class="name"><code>getLanguageCode</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -408,240 +352,14 @@
 
             
 
-            <td class="description last">x or y or z
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>zoomMultiplier</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">zoom multiplier. Default is 1.1</td>
+            <td class="description last">Your custom getLanguageCode() function.returns the "primary language" subtag of the language version of the browser.Examples: "en" - English language, "ru" Russian.See the "Syntax" paragraph of RFC 4646 <a href="https://tools.ietf.org/html/rfc4646#section-2.1">rfc4646 2.1 Syntax</a> for details.Default returns the 'en' is English language.You can import { getLanguageCode } from '../../commonNodeJS/master/lang.js';</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">position offset. Default is 0.1</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">axis name. Default is axisName.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>min</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Minimum range of the y axis. Default is -1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>max</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Maximum range of the y axis. Default is 1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>marks</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Number of scale marks. Default is undefined no marks.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
+                <td class="name"><code>lang</code></td>
             
 
             <td class="type">
@@ -667,216 +385,14 @@
 
             
 
-            <td class="description last">followed options of the text of the marks is available
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>precision</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Formats a scale marks into a specified length. Default is 4</td>
+            <td class="description last">Object with localized language values</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>textHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The height of the text. Default is 0.1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>rect</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">rectangle around the text.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>displayRect</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">true - the rectangle around the text is visible. Default is true.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>guiParams.axesHelperFolder</code></td>
+                <td class="name"><code>axesHelperFolder</code></td>
             
 
             <td class="type">
@@ -909,13 +425,13 @@
 
         <tr>
             
-                <td class="name"><code>options.cookie</code></td>
+                <td class="name"><code>cookie</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Cookie</span>
+<span class="param-type">cookie</span>
 
 
             
@@ -935,14 +451,14 @@
 
             
 
-            <td class="description last">Your custom cookie function for saving and loading of the AxesHelper settings. Default cookie is not saving settings.</td>
+            <td class="description last">Your custom cookie function for saving and loading of the AxesHelper settings.See <a href="https://github.com/anhr/cookieNodeJS">cookieNodeJS</a>.Default cookie is not saving settings.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>options.cookieName</code></td>
+                <td class="name"><code>cookieName</code></td>
             
 
             <td class="type">
@@ -968,40 +484,14 @@
 
             
 
-            <td class="description last">Name of the cookie is "AxesHelper" + options.cookieName. Default is undefined.</td>
+            <td class="description last">Name of the cookie is "AxesHelper" + guiParams.cookieName. Default is undefined.</td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>options.camera</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.PerspectiveCamera</span>
-
-
-            
             </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">camera.Set the camera if you want to see text size is independent from camera.fov. The text height will be calculated as textHeight = camera.fov * textHeight / 50See https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera.fov about camera.fov.Default is undefined. Default camera.fov is 50.</td>
         </tr>
 
     
@@ -1042,7 +532,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AxesHelperGui.js.html">AxesHelperGui.js</a>, <a href="AxesHelperGui.js.html#line69">line 69</a>
+        <a href="AxesHelperGui.js.html">AxesHelperGui.js</a>, <a href="AxesHelperGui.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -1071,6 +561,20 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>AxesHelperGui( axesHelper, gui, {
+
+	cookie: cookie,
+	cookieName: 'mySettings',
+
+	//Localize of the scales folder to Azerbaijani language
+	getLanguageCode: function() { return 'az'; },
+	lang: { scales: 'tərəzi', languageCode: 'az' },
+
+} );</code></pre>
+
+
 
         
     
@@ -1094,7 +598,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Aug 17 2020 05:46:16 GMT+0700 (Красноярск, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Aug 18 2020 02:10:13 GMT+0700 (Красноярск, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>
