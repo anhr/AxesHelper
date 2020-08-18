@@ -341,7 +341,7 @@ moveGroup.gui( gui, {
 } );
 ```
 Now you can move, scale and rotate the scene. Unfortunately, you also move the axes.
-For resolving of the issue, ñreate groupMove and move all your meshs from scene to groupMove.
+For resolving of the issue, create groupMove and move all your meshs from scene to groupMove.
 ```
 const groupMove = new THREE.Group();
 scene.add( groupMove );
