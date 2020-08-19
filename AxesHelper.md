@@ -252,6 +252,88 @@ For testing please move cursor over point. Cursor will be changing to 'pointer'.
 
 You can see a dot lines from point to axes if you click over point.
 
+You can display a text if mouse is over to object in the 3d space.
+
+Import SpriteText for it.
+```
+import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+```
+or
+download [SpriteText](https://github.com/anhr/SpriteText) repository into your "[folderName]\SpriteText\master" folder.
+```
+import { SpriteText } from './SpriteText/master/SpriteText.js';
+```
+Set THREE to SpriteText.
+```
+SpriteText.setTHREE( THREE );
+```
+and edit points.userData.raycaster
+```
+points.userData.raycaster = {
+
+	onIntersection: function ( intersection ) {
+
+		if ( ( typeof SpriteText !== 'undefined' ) && !this.spriteText ) {
+
+			const position = getIntersectionPosition( intersection );
+			//console.warn( 'onIntersection x = ' + position.x + ' y =  ' + position.y + ' z = ' +  position.z );
+
+			var x, y, z;
+			if ( axesHelper ) {
+
+				const scales = axesHelper.options.scales;
+				x = scales.x.name;
+				y = scales.y.name;
+				z = scales.z.name;
+
+			} else {
+
+				x = 'x';
+				y = 'y';
+				z = 'z';
+
+			}
+			this.spriteText = new SpriteText(
+				( intersection.object.name === '' ? '' : intersection.object.name + '\n' ) +
+				'Point\n' + x + ' = ' + position.x + '\n' + y + ' =  ' + position.y + '\n' + z + ' = ' +  position.z,
+				position, {
+
+					group: scene,
+					rect: {
+
+						displayRect: true,
+						borderRadius: 15,
+
+					},
+					center: new THREE.Vector2( 1, 0 ),
+					//sizeAttenuation: true,
+
+				}
+			);
+
+		}
+		renderer.domElement.style.cursor = 'pointer';
+
+	},
+	onIntersectionOut: function ( ) {
+
+		if ( this.spriteText ) {
+
+			scene.remove( this.spriteText );
+			delete this.spriteText;
+
+		}
+		renderer.domElement.style.cursor = cursor;
+
+	},
+	onMouseDown: function ( intersect ) {
+
+		axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+
+	}
+
+}
+```
 ### AxesHelperGui
 
 Add AxesHelperGui into [dat.gui](https://github.com/anhr/dat.gui) for manual change settings of the AxesHelper.
