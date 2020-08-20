@@ -362,7 +362,7 @@ or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into
 ```
 import { getLanguageCode } from './commonNodeJS/master/lang.js';
 ```
-If you want save a custom SpriteText settings to the cookie, please uncomment
+If you want save a custom AxesHelper settings to the cookie, please uncomment
 ```
 cookie: cookie,
 ```
@@ -385,7 +385,7 @@ import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/Move
 ```
 or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
 ```
-import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';
+import { MoveGroup } from './commonNodeJS/master/MoveGroup.js';
 ```
 ```
 const moveGroup = new MoveGroup( scene, {
@@ -402,7 +402,8 @@ moveGroup.gui( gui, {
 
 } );
 ```
-Now you can move, scale and rotate the scene. Unfortunately, you also move the axes.
+Now you can see the 'Move points' folder in the dat.gui.
+You can move, scale and rotate the scene. Unfortunately, you also move the axes.
 For resolving of the issue, create groupMove and move all your meshs from scene to groupMove.
 ```
 const groupMove = new THREE.Group();
@@ -422,3 +423,4 @@ const moveGroup = new MoveGroup( groupMove, {
 
 } );
 ```
+Enjoy my code :)
