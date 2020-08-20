@@ -174,7 +174,10 @@ points.userData.raycaster = {
 	},
 	onMouseDown: function ( intersect ) {
 
-		axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+		if ( axesHelper )
+			axesHelper.exposePosition( intersect );
+		if ( guiSelectPoint )
+			guiSelectPoint.select( intersect );
 
 	}
 
@@ -194,33 +197,6 @@ raycaster.setStereoEffect( {
 	renderer: renderer,
 	camera: camera,
 	stereoEffect: stereoEffect,
-	onIntersection: function ( intersects, mouse ) {
-
-		var intersection = intersects[0];
-		if (
-			( intersection.object.userData.raycaster !== undefined )
-			&& ( intersection.object.userData.raycaster.onIntersection !== undefined ) ) {
-
-			intersection.object.userData.raycaster.onIntersection( intersection );
-
-		}
-
-	},
-	onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
-	onMouseDown: function ( intersects ) {
-
-		var intersection = intersects[0];
-		if (
-			( intersection.object.userData.raycaster !== undefined )
-			&& ( intersection.object.userData.raycaster.onMouseDown !== undefined ) ) {
-
-			intersection.object.userData.raycaster.onMouseDown( intersection );
-
-		}
-		if ( typeof guiSelectPoint !== 'undefined' )
-			guiSelectPoint.select( intersection );
-
-	}
 
 } );
 raycaster.stereo.addParticle( points );
@@ -328,7 +304,10 @@ points.userData.raycaster = {
 	},
 	onMouseDown: function ( intersect ) {
 
-		axesHelper.exposePosition( getIntersectionPosition( intersect ) );
+		if ( axesHelper )
+			axesHelper.exposePosition( intersect );
+		if ( guiSelectPoint )
+			guiSelectPoint.select( intersect );
 
 	}
 
