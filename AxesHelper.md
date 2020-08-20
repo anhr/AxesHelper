@@ -158,8 +158,6 @@ const cursor = renderer.domElement.style.cursor;
 ```
 Define of the actions for objects in the 3d space the mouse is over.
 ```
-function getIntersectionPosition( intersection )
-	{ return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize ); }
 points.userData.raycaster = {
 
 	onIntersection: function ( intersection ) {
@@ -250,6 +248,9 @@ points.userData.raycaster = {
 	onIntersection: function ( intersection ) {
 
 		if ( ( typeof SpriteText !== 'undefined' ) && !this.spriteText ) {
+
+			function getIntersectionPosition( intersection )
+				{ return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize ); }
 
 			const position = getIntersectionPosition( intersection );
 			//console.warn( 'onIntersection x = ' + position.x + ' y =  ' + position.y + ' z = ' +  position.z );
