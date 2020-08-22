@@ -34,9 +34,9 @@
 	<script type="module">
 
 		//import * as THREE from '../../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js
-		import * as THREE from 'https://threejs.org/build/three.module.js';
+		//import * as THREE from 'https://threejs.org/build/three.module.js';
 		//import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
-		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
+		import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
 		//import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
 		import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
@@ -57,7 +57,8 @@
 		import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
 
 		//import { SpriteText } from '../../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
-		//import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+		import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+		SpriteText.setTHREE( THREE );
 
 		//import { SpriteTextGui } from '../../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
 		//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
@@ -72,8 +73,7 @@
 		import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
 
 		var camera, scene, renderer, stereoEffect, axesHelper, controls, intersects, guiSelectPoint, moveGroup, raycaster;
-		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;//raycaster = new THREE.Raycaster() 
-//		raycaster.params.Points.threshold = threshold;
+		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.08;//0.02;
 
 		init();
 		animate();
@@ -212,25 +212,25 @@
 				} ) );
 			groupMove.add( points );
 			points.position.copy( new THREE.Vector3( 0.1, 0, 0 ) );
-//			points.material.color.set( 0xff0000 );
-//			points.geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( [1,1,1], 3 ) );
-			//			points.name = 'Points1';
-			arrayintersectObjects.push( points );
+			points.name = 'no sizeAttenuation';
+			if ( typeof StereoEffect === "undefined" )
+				arrayintersectObjects.push( points );
 			function getIntersectionPosition( intersection ) {
 				
 				if ( typeof getObjectPosition !== 'undefined' )
 					return getObjectPosition( intersection.object, intersection.index );
-				return new THREE.Vector3().fromArray( points.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
+				return new THREE.Vector3().fromArray( intersection.object.geometry.attributes.position.array, intersection.index * points.geometry.attributes.position.itemSize );
 			
 			}
 			points.userData.raycaster = {
 
 				onIntersection: function ( intersection ) {
 
+/*
 					if ( !this.bIntersectionOut )
 						return;
 					this.bIntersectionOut = false;
-
+*/
 					if ( typeof SpriteText !== 'undefined' ) {
 
 						const position = getIntersectionPosition( intersection );
@@ -252,6 +252,7 @@
 
 						}
 						this.spriteText = new SpriteText(
+							( intersection.object.name === '' ? '' : intersection.object.name + '\n' ) +
 							'Point\n' + x + ' = ' + position.x + '\n' + y + ' =  ' + position.y + '\n' + z + ' = ' +  position.z,
 							position, {
 
@@ -274,28 +275,125 @@
 				},
 				onIntersectionOut: function ( ) {
 
+/*
 					if ( this.bIntersectionOut )
 						return;
 					this.bIntersectionOut = true;
+*/
 					//console.warn( 'onIntersectionOut' );
-//					options.removeSpriteTextIntersection( scene );
 					scene.remove( this.spriteText );
 					renderer.domElement.style.cursor = cursor;
 
 				},
-				bIntersectionOut: true,
+//				bIntersectionOut: true,
 				onMouseDown: function ( intersect ) {
 
-					if ( !axesHelper )
-						return;
-//					axesHelper.exposePosition( getIntersectionPosition( intersect ) );
-					axesHelper.exposePosition( intersect );
+					if ( axesHelper )
+						axesHelper.exposePosition( intersect );
+					if ( guiSelectPoint )
+						guiSelectPoint.select( intersect );
 
 				}
 
 
 			}
-			groupMove.add( points );
+
+			const pointsSizeAttenuation = new THREE.Points( new THREE.BufferGeometry().setFromPoints( [
+					new THREE.Vector3( -1, -0.5 ,0.5 ),
+					new THREE.Vector3( -3, 0.5 ,-0.5 )
+				] ),
+				new THREE.PointsMaterial( {
+
+					color: 0xffffff,
+					size: 0.5,//0.05,
+					//sizeAttenuation: true,
+					alphaTest: 0.5,
+
+				} ) );
+
+			if ( typeof pointsSizeAttenuation !== 'undefined' ) {
+
+				groupMove.add( pointsSizeAttenuation );
+				if ( typeof StereoEffect === "undefined" )
+					arrayintersectObjects.push( pointsSizeAttenuation );
+				pointsSizeAttenuation.userData.raycaster = {
+
+					onIntersection: function ( intersection ) {
+
+/*
+						if ( !this.bIntersectionOut )
+							return;
+						this.bIntersectionOut = false;
+*/
+
+						if ( typeof SpriteText !== 'undefined' ) {
+
+							const position = getIntersectionPosition( intersection );
+							//console.warn( 'onIntersection x = ' + position.x + ' y =  ' + position.y + ' z = ' +  position.z );
+
+							var x, y, z;
+							if ( axesHelper ) {
+
+								const scales = axesHelper.options.scales;
+								x = scales.x.name;
+								y = scales.y.name;
+								z = scales.z.name;
+
+							} else {
+
+								x = 'x';
+								y = 'y';
+								z = 'z';
+
+							}
+							this.spriteText = new SpriteText(
+								( intersection.object.name === '' ? '' : intersection.object.name + '\n' ) +
+								'Point\n' + x + ' = ' + position.x + '\n' + y + ' =  ' + position.y + '\n' + z + ' = ' + position.z,
+								position, {
+
+								group: scene,
+								rect: {
+
+									displayRect: true,
+									borderRadius: 15,
+
+								},
+								center: new THREE.Vector2( 1, 0 ),
+								//sizeAttenuation: true,
+
+							}
+							);
+
+						}
+						renderer.domElement.style.cursor = 'pointer';
+
+					},
+					onIntersectionOut: function () {
+
+/*
+						if ( this.bIntersectionOut )
+							return;
+						this.bIntersectionOut = true;
+*/
+						//console.warn( 'onIntersectionOut' );
+						//					options.removeSpriteTextIntersection( scene );
+						scene.remove( this.spriteText );
+						renderer.domElement.style.cursor = cursor;
+
+					},
+//					bIntersectionOut: true,
+					onMouseDown: function ( intersect ) {
+
+						if ( axesHelper )
+							axesHelper.exposePosition( intersect );
+						if ( guiSelectPoint )
+							guiSelectPoint.select( intersect );
+
+					}
+
+				}
+
+			}
 
 			scene.add( new THREE.AmbientLight( 0x222222 ) );
 
@@ -351,24 +449,23 @@
 					renderer: renderer,
 					camera: camera,
 					stereoEffect: stereoEffect,
+/*					
 					onIntersection: function ( intersects, mouse ) {
 
-						points.userData.raycaster.onIntersection( intersects[0] );
-						/*
-												intersects.forEach( function ( intersection ) {
-						
-													if ( intersection.object.userData.raycaster !== undefined ) {
-						
-														intersection.object.userData.raycaster.onIntersection( raycaster, intersection, scene, mouse );
-														INTERSECTED.push( intersection.object );
-						
-													}
-						
-												} );
-						*/
+//						points.userData.raycaster.onIntersection( intersects[0] );
+						var intersection = intersects[0];
+						if (
+							( intersection.object.userData.raycaster !== undefined )
+							&& ( intersection.object.userData.raycaster.onIntersection !== undefined ) ) {
+
+							intersection.object.userData.raycaster.onIntersection( intersection );
+
+						}
 
 					},
-					onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
+*/					
+//					onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
+/*
 					onMouseDown: function ( intersects ) {
 
 						var intersection = intersects[0];
@@ -388,9 +485,11 @@
 						//							axesHelper.exposePosition( getPosition( intersection ) );
 
 					}
+*/
 
 				} );
 				raycaster.stereo.addParticle( points );
+				raycaster.stereo.addParticle( pointsSizeAttenuation );
 
 			}
 
@@ -407,16 +506,11 @@
 
 				if ( typeof GuiSelectPoint !== "undefined" ) {
 
-//					GuiSelectPoint.setTHREE( THREE );
-					
 					guiSelectPoint = new GuiSelectPoint( THREE, { axesHelper: axesHelper, } );
-					guiSelectPoint.add( gui, {
-
-		//				cookie: cookie,
-						//getLanguageCode: getLanguageCode,
-
-					} );
+					guiSelectPoint.add( gui );
 					guiSelectPoint.addMesh( points );
+					if ( typeof pointsSizeAttenuation !== 'undefined' )
+						guiSelectPoint.addMesh( pointsSizeAttenuation );
 
 				}
 
@@ -438,6 +532,7 @@
 						getLanguageCode: getLanguageCode,
 						lang: { moveGroup: 'Move Meshs', },
 						guiSelectPoint: guiSelectPoint,
+						axesHelper: axesHelper
 
 					} );
 				if ( axesHelper )
@@ -448,22 +543,12 @@
 						getLanguageCode: getLanguageCode,
 
 					} );
-/*				
-					axesHelper.gui( gui, {
-
-						cookie: cookie,
-						//cookieName: 'mySettings',
-						getLanguageCode: getLanguageCode,
-
-					} );
-*/					
 
 				//StereoEffect settings
 				if ( typeof stereoEffect !== "undefined" )
 					stereoEffect.gui( gui, {
 
 						getLanguageCode: getLanguageCode,
-//						gui: gui,
 
 					} );
 
@@ -480,20 +565,9 @@
 		}
 
 		//Raycaster https://threejs.org/docs/index.html#api/en/core/Raycaster
-/*
-		function onMouseMove( event ) {
 
-			// calculate mouse position in normalized device coordinates
-			// (-1 to +1) for both components
-
-			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-//			console.warn( 'mouse.x = ' + mouse.x + ' mouse.y = ' + mouse.y );
-
-		}
-
-		window.addEventListener( 'mousemove', onMouseMove, false );
-*/
+//		var bIntersectedOut = false;
+		var intersectedObject;
 		window.addEventListener( 'mousemove', function( event ) {
 
 			// calculate mouse position in normalized device coordinates
@@ -516,28 +590,40 @@
 			}
 			// calculate objects intersecting the picking ray
 			intersects = raycaster.intersectObjects( arrayintersectObjects );
-//			intersects = raycaster.intersectObjects( scene.children );
-//			const intersects = raycaster.intersectObjects( arrayintersectObjects );
+			if ( !intersects )
+				return;
 
 			arrayintersectObjects.forEach( function ( object ) {
 
-				if ( !intersects )
-					return;
-				var bIntersected = false;
-				for ( var i = 0; i < intersects.length; i++ ) {
+//				var bIntersected = false;
+				if ( intersectedObject && ( intersects.length === 0 ) ) {
 
-					const intersect = intersects[ i ];
-//					const objectIntersect = intersects[ i ].object;
-					if ( Object.is( object, intersect.object ) ) {
-
-						object.userData.raycaster.onIntersection( intersect );
-						bIntersected = true;
-
-					}
+					intersectedObject.userData.raycaster.onIntersectionOut();
+					intersectedObject = undefined;
 
 				}
-				if ( !bIntersected )
+				else if ( !intersectedObject ) 
+					for ( var i = 0; i < intersects.length; i++ ) {
+
+						const intersect = intersects[ i ];
+						if ( Object.is( object, intersect.object ) ) {
+
+							object.userData.raycaster.onIntersection( intersect );
+							intersectedObject = object;
+	//						bIntersected = true;
+	//						bIntersectedOut = true;
+
+						}
+
+					}
+/*
+				if ( bIntersectedOut && ( intersects.length === 0 ) ) {
+
 					object.userData.raycaster.onIntersectionOut();
+					bIntersectedOut = false;
+
+				}
+*/
 
 			} );
 
@@ -547,17 +633,12 @@
 			if ( raycaster === undefined )
 				return;
 
-/*
-			if ( mouseenter )
-				return;
-*/
 			if ( raycaster.stereo !== undefined ) {
 
 				raycaster.stereo.onDocumentMouseDown( event );
 				return;
 
 			}
-//			raycaster.setFromCamera( mouse, camera );
 			if ( intersects && (intersects.length > 0 ) ) {
 
 				if ( intersects[0].object.userData.raycaster ) {
@@ -576,62 +657,6 @@
 		function animate() {
 
 			requestAnimationFrame( animate );
-
-			//Raycaster https://threejs.org/docs/index.html#api/en/core/Raycaster
-/*
-			// update the picking ray with the camera and mouse position
-			raycaster.setFromCamera( mouse, camera );
-
-			// calculate objects intersecting the picking ray
-			intersects = raycaster.intersectObjects( arrayintersectObjects );
-//			intersects = raycaster.intersectObjects( scene.children );
-//			const intersects = raycaster.intersectObjects( arrayintersectObjects );
-*/
-/*
-			arrayintersectObjects.forEach( function ( object ) {
-
-				if ( object.userData.raycaster )
-					object.userData.raycaster.bIntersectionOut = true;
-
-			} );
-			for ( var i = 0; i < intersects.length; i++ ) {
-
-				const object = intersects[ i ].object;
-				if ( object.userData.raycaster )
-					object.userData.raycaster.onIntersection();
-
-			}
-			arrayintersectObjects.forEach( function ( object ) {
-
-				Object.is( object, arrayintersectObjects[0] )
-				if ( object.userData.raycaster && !object.userData.raycaster.bIntersectionOut )
-					object.userData.raycaster.onIntersectionOut();
-
-			} );
-*/
-/*
-			arrayintersectObjects.forEach( function ( object ) {
-
-				if ( !intersects )
-					return;
-				var bIntersected = false;
-				for ( var i = 0; i < intersects.length; i++ ) {
-
-					const intersect = intersects[ i ];
-//					const objectIntersect = intersects[ i ].object;
-					if ( Object.is( object, intersect.object ) ) {
-
-						object.userData.raycaster.onIntersection( intersect );
-						bIntersected = true;
-
-					}
-
-				}
-				if ( !bIntersected )
-					object.userData.raycaster.onIntersectionOut();
-
-			} );
-*/
 
 			if ( stereoEffect === undefined )
 				renderer.render( scene, camera );
