@@ -29,9 +29,8 @@ import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/
  * @param {object} [options] followed options is available
  * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.
  * @param {number} [options.scales] axes scales. Default is {}
- * @param {THREE.Group} [options.groupMove] group of the meshes you have added to the scene.
- * Scales of the axes is depending from scale, position and rotation of this group. Default is group.
- * 
+ * @param {THREE.Vector3} [options.posAxesIntersection] Position of the axes intersection.
+ *
  * @param {number} [options.scales.axisName] x or y or z
  * @param {number} [options.scales.axisName.zoomMultiplier] zoom multiplier. Default is 1.1
  * @param {number} [options.scales.axisName.offset] position offset. Default is 0.1
@@ -71,7 +70,6 @@ export function AxesHelper( THREE, group, options ) {
 	//Создаю новый объект camera что бы не засорять cookie лишней информацией
 	options.camera = {
 
-//		position: new THREE.Vector3( 0.4, 0.4, 2 ),
 		fov: options.camera !== undefined ? options.camera.fov : 50,
 
 	};
@@ -107,14 +105,13 @@ export function AxesHelper( THREE, group, options ) {
 
 		fontColor: options.color,
 		textHeight: options.scales.text.textHeight,
-//		fov: options.scales.text.fov,
 		fov: options.camera.fov,
 		rect: options.scales.text.rect,
 
 	}
 	group.add( groupAxesHelper );
 
-	const posAxesIntersection = new THREE.Vector3().copy( group.position ).divide( group.scale );//For moving of the axes intersection to the center of the canvas ( to the camera focus ) 
+	options.posAxesIntersection = options.posAxesIntersection || new THREE.Vector3();//.copy( group.position ).divide( group.scale );//For moving of the axes intersection to the center of the canvas ( to the camera focus )
 
 	/**
 	 * create axis
@@ -125,16 +122,11 @@ export function AxesHelper( THREE, group, options ) {
 	this.createAxis = function ( axisName ) {
 
 		const group = new THREE.Group();
-//		groupAxesHelper.add( group );
 		group.visible = options.scales.display;
 		
 		const scale = options.scales[axisName];
 		if ( !scale )
 			return;
-/*			
-		if ( scale.min === undefined ) scale.min = - 1;
-		if ( scale.max === undefined ) scale.max = 1;
-*/		
 
 		var color = options.color, opacity = 1;
 		try {
@@ -183,27 +175,21 @@ export function AxesHelper( THREE, group, options ) {
 			),
 		] ), new THREE.LineBasicMaterial( { color: color, opacity: opacity, transparent: true, } ) );
 		//moving of the axes intersection to the center of the canvas ( to the camera focus )
-		if ( axisName !== 'x' ) lineAxis.position.x = - posAxesIntersection.x;
-		if ( axisName !== 'y' ) lineAxis.position.y = - posAxesIntersection.y;
-		if ( axisName !== 'z' ) lineAxis.position.z = - posAxesIntersection.z;
+		if ( axisName !== 'x' ) lineAxis.position.x = - options.posAxesIntersection.x;
+		if ( axisName !== 'y' ) lineAxis.position.y = - options.posAxesIntersection.y;
+		if ( axisName !== 'z' ) lineAxis.position.z = - options.posAxesIntersection.z;
 		lineAxis.add( group );
 		lineAxis.userData.axisName = axisName;
 		groupAxesHelper.add( lineAxis );
 
-//		if ( ( scale.marks !== undefined ) && options.scales.display )
 		if ( scale.marks !== undefined )
 		{
 
-			const groupMove = options.groupMove || group,
-//				posGroup = axisName === 'x' ? groupMove.position.x : axisName === 'y' ? groupMove.position.y : axisName === 'z' ? groupMove.position.z : 0,
-				SpriteMark = function (
+			const SpriteMark = function (
 					position,
-//				options
 			) {
 
 				position = position || new THREE.Vector3( 0, 0, 0 );
-				//console.warn( 'axisName: ' + axisName + ' position = ' + position.x + ', ' + position.y + ', ' + position.z );
-//				options = options || {};
 				const sizeAttenuation = false;
 
 
@@ -249,10 +235,7 @@ export function AxesHelper( THREE, group, options ) {
 						sprite.scale.y = width / canvas.height;
 
 					}
-/*					
-sprite.scale.x /= 2;
-sprite.scale.y /= 2;
-*/
+
 					sprite.scale.x *= options.camera.fov / ( 50 * 2 );
 					sprite.scale.y *= options.camera.fov / ( 50 * 2 );
 					
@@ -263,7 +246,6 @@ sprite.scale.y /= 2;
 					//See https://threejs.org/docs/index.html#api/en/materials/SpriteMaterial.sizeAttenuation
 					sprite.material.sizeAttenuation = sizeAttenuation;
 
-//					sprite.material.rotation = rotation;
 					sprite.material.needsUpdate = true;
 
 					function getTextPrecision() {
@@ -271,20 +253,17 @@ sprite.scale.y /= 2;
 						return options.scales.text.precision !== undefined ? text.toPrecision( options.scales.text.precision ) : text.toString();
 
 					}
-//					var text = ( axisName === 'x' ? position.x + posGroup : axisName === 'y' ? position.y + posGroup : position.z + posGroup );
-//					var text = ( axisName === 'x' ? position.x - posGroup : axisName === 'y' ? position.y - posGroup : position.z - posGroup );
 					var text = ( axisName === 'x' ? position.x : axisName === 'y' ? position.y : position.z );
 					function getCenterX() {
 
 						const a = ( 0.013 - 0.05 ) /15, b = 0.013 - 17 * a;
-//						const a = ( 0.013 - 0.1 ) /16, b = 0.013 - 17 * a;
 						return - width * ( getTextPrecision().length * a + b );
 
 					}
 					const spriteText = new SpriteText(
 						getTextPrecision(),
 						new THREE.Vector3(
-							position.x,// + ( axisName === 'y' ? width / canvas.width : 0 ),
+							position.x,
 							position.y,
 							position.z,
 						), {
@@ -293,10 +272,6 @@ sprite.scale.y /= 2;
 						rotation: axisName === 'y' ? 0 : - Math.PI / 2,
 						center: new THREE.Vector2(
 
-//							-0.1,//текст по оси y сдвигается вправо
-//							 - width * 0.05,//текст по оси y сдвигается вправо
-//							 - width * 0.013,//текст по оси y сдвигается вправо
-//							 - width * ( textPrecision.length * a + b ),//текст по оси y сдвигается вправо
 							 getCenterX(),//текст по оси y сдвигается вправо
 							//текст по оси x и z сдвигается вниз
 
@@ -305,18 +280,11 @@ sprite.scale.y /= 2;
 							//текст по оси y сдвигается вверх
 
 						),
-						/*
-												fontColor: options.color,
-												textHeight: options.scales.text.textHeight,
-												fov: options.scales.text.fov,
-												rect: options.scales.text.rect,
-						*/
 
 					} );
 					spriteText.userData.updatePrecision = function () {
 
 						spriteText.userData.updateText( text.toPrecision( options.scales.text.precision ) );
-//						spriteText.center.x = - width * ( options.scales.text.precision * a + b );
 						spriteText.center.x = getCenterX();
 
 					}
@@ -345,12 +313,6 @@ sprite.scale.y /= 2;
 		//Axis name
 		var axisNameOptions = {
 
-/*
-			fontColor: options.color,
-//						rotation: axisName === 'y' ? 0 : - Math.PI / 2,
-			textHeight: options.scales.text.textHeight,
-			rect: options.scales.text.rect,
-*/
 			center: new THREE.Vector2(
 				axisName === 'y' ? 1.1 : -0.1,
 				axisName === 'y' ? 0 : -0.1
@@ -373,7 +335,6 @@ sprite.scale.y /= 2;
 				axisName === 'y' ? scale.min : 0,
 				axisName === 'z' ? scale.min : 0,
 			), axisNameOptions ) );
-//		axesGroups[axisName] = group;
 
 	}
 	this.createAxis( 'x' );
@@ -381,8 +342,6 @@ sprite.scale.y /= 2;
 	this.createAxis( 'z' );
 	if( groupAxesHelper.children.length === 0 )
 		console.warn( 'AxesHelper: Define at least one axis.' )
-
-//	updateSpriteTextGroup( groupAxesHelper );
 
 	//dotted lines
 	function dotLines( _scene ) {
@@ -427,19 +386,15 @@ sprite.scale.y /= 2;
 			scene.add( groupDotLines );
 
 		}
-		function verticeAxis( position, scale ) { return - position / scale; }
-		function getDashSize() {
-
-			return 0.05 / ( Math.max( Math.max( group.scale.x, group.scale.y ), group.scale.z ) );
-
-		}
+		function verticeAxis( axisName ) { return ( - options.posAxesIntersection[axisName] - group.position[axisName] ) / group.scale[axisName]; }
+		function getDashSize() { return 0.05 / ( Math.max( Math.max( group.scale.x, group.scale.y ), group.scale.z ) ); }
 		this.dottedLines = function ( _intersection ) {
 
 			intersection = _intersection;
 			const pointVertice = intersection instanceof THREE.Vector4 || intersection instanceof THREE.Vector3 ? intersection : getObjectPosition( intersection.object, intersection.index );
 			if ( groupDotLines !== undefined ) {
 
-				function dottedLine( axisName/*axesId*/ ) {
+				function dottedLine( axisName ) {
 
 					var line;
 					switch ( axisName ) {
@@ -461,11 +416,11 @@ sprite.scale.y /= 2;
 						return;//Current axis is not exists
 					var lineVertices = line.geometry.attributes.position.array;
 					lineVertices[0] = axisName === 'x' ? pointVertice.x :
-						verticeAxis( group.position.x, group.scale.x );
+						verticeAxis( 'x' );//group.position.x, group.scale.x );
 					lineVertices[1] = axisName === 'y' ? pointVertice.y :
-						verticeAxis( group.position.y, group.scale.y );
+						verticeAxis( 'y' );//group.position.y, group.scale.y );
 					lineVertices[2] = axisName === 'z' ? pointVertice.z :
-						verticeAxis( group.position.z, group.scale.z );
+						verticeAxis( 'z' );//group.position.z, group.scale.z );
 
 					lineVertices[3] = pointVertice.x;
 					lineVertices[4] = pointVertice.y;
@@ -487,17 +442,17 @@ sprite.scale.y /= 2;
 
 			createGroup();
 
-			function dottedLine( axisName /*axesId*/ ) {
+			function dottedLine( axisName ) {
 
 				if ( !options.scales[axisName] )
 					return;
 				var lineVertices = [
-					new THREE.Vector3( 0, 0, 0 ),
+					new THREE.Vector3().copy( options.posAxesIntersection ),
 					pointVertice,
 				];
-				lineVertices[0].x = axisName === 'x' ? lineVertices[1].x : verticeAxis( group.position.x, group.scale.x );
-				lineVertices[0].y = axisName === 'y' ? lineVertices[1].y : verticeAxis( group.position.y, group.scale.y );
-				lineVertices[0].z = axisName === 'z' ? lineVertices[1].z : verticeAxis( group.position.z, group.scale.z );
+				lineVertices[0].x = axisName === 'x' ? lineVertices[1].x : verticeAxis( 'x' );
+				lineVertices[0].y = axisName === 'y' ? lineVertices[1].y : verticeAxis( 'y' );
+				lineVertices[0].z = axisName === 'z' ? lineVertices[1].z : verticeAxis( 'z' );
 
 				var size = getDashSize();
 				if ( options.colorsHelper === undefined )
@@ -523,37 +478,6 @@ sprite.scale.y /= 2;
 				return;
 			
 			this.dottedLines( intersection );
-/*			
-			function dottedLine( axesId, line ) {
-
-				var size = getDashSize();
-				line.material.dashSize = size;
-				line.material.gapSize = size;
-
-				var positionArray = line.geometry.attributes.position.array,
-					itemSize = line.geometry.attributes.position.itemSize;
-
-				const x = 0, y = 1, z = 2;
-				positionArray[itemSize + x] =
-					axesId === 'x' ? positionArray[x] : verticeAxis( group.position.x, group.scale.x );
-				positionArray[itemSize + y] =
-					axesId === 'y' ? positionArray[y] : verticeAxis( group.position.y, group.scale.y );
-				positionArray[itemSize + z] =
-					axesId === 'z' ? positionArray[z] : verticeAxis( group.position.z, group.scale.z );
-				line.geometry.attributes.position.needsUpdate = true;
-
-			}
-			groupDotLines.children.forEach( function ( line ) {
-
-				dottedLine( 'x', line );
-
-			} );
-*/			
-/*			
-			dottedLine( axesHelper.axesEnum.x, groupDotLines.children[axesHelper.axesEnum.x] );
-			dottedLine( axesHelper.axesEnum.y, groupDotLines.children[axesHelper.axesEnum.y] );
-			dottedLine( axesHelper.axesEnum.z, groupDotLines.children[axesHelper.axesEnum.z] );
-*/			
 
 		}
 		this.movePointAxes = function ( axesId, value ) {
@@ -595,21 +519,6 @@ sprite.scale.y /= 2;
 	* Expose position on axes.
 	* @function this.
     * exposePosition
-	* @param {THREE.Vector3} pointVertice position
-	*/
-/*	
-	this.exposePosition = function( pointVertice ) {
-
-		if ( pointVertice === undefined )
-			dotLines.remove();
-		else dotLines.dottedLines( pointVertice );
-
-	}
-*/
-	/**
-	* Expose position on axes.
-	* @function this.
-    * exposePosition
 	* @param {THREE.Vector3|object} intersection position or intersection. See {@link https://threejs.org/docs/index.html#api/en/core/Raycaster|Raycaster} for detail.
 	*/
 	this.exposePosition = function( intersection ) {
@@ -620,21 +529,7 @@ sprite.scale.y /= 2;
 			return;
 
 		}
-/*		
-		if ( intersection instanceof THREE.Vector3 ) {
-
-//			dotLines.dottedLines( intersection );
-			console.error( 'AxesHelper.exposePosition: intersection instanceof THREE.Vector3' );
-			return;
-
-		}
-*/		
 		dotLines.dottedLines( intersection );
-//		dotLines.dottedLines( getObjectPosition( intersection.object, intersection.index ) );
-/*		
-		const position = intersection.object.geometry.attributes.position;
-		dotLines.dottedLines( new THREE.Vector3().fromArray( position.array, intersection.index * position.itemSize ) );
-*/		
 
 	}
 	/**

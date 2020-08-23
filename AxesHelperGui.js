@@ -14,8 +14,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0
 */
 
-//import { ScaleControllers } from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
-
 //import ScaleController from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
 import ScaleController from 'https://raw.githack.com/anhr/commonNodeJS/master/ScaleController.js';
 
@@ -106,15 +104,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 		marks: 'Marks',
 		marksTitle: 'Number of scale marks',
 
+		axesIntersection: 'Axes Intersection',
+
 		defaultButton: 'Default',
 		defaultTitle: 'Restore default Axes Helper settings.',
-/*
-		//Zoom
-		zoom: 'Zoom',
-		in: 'in',
-		out: 'out',
-		wheelZoom: 'Scroll the mouse wheel to zoom',
-*/
 
 	};
 
@@ -124,9 +117,9 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 		case 'ru'://Russian language
 
-			lang.axesHelper = 'Оси координат'; //'Axes Helper'
+			lang.axesHelper = 'Оси координат';
 
-			lang.scales = 'Шкалы';//'Scales',
+			lang.scales = 'Шкалы';
 
 			lang.displayScales = 'Показать';
 			lang.displayScalesTitle = 'Показать или скрыть шкалы осей координат.';
@@ -140,15 +133,10 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 			lang.marks = 'Риски';
 			lang.marksTitle = 'Количество отметок на шкале';
 
+			lang.axesIntersection = 'Начало координат',
+
 			lang.defaultButton = 'Восстановить';
 			lang.defaultTitle = 'Восстановить настройки осей координат по умолчанию.';
-/*
-			//Zoom
-			lang.zoom = 'Масштаб';
-			lang.in = 'увеличить';
-			lang.out = 'уменьшить';
-			lang.wheelZoom = 'Прокрутите колесико мыши для изменения масштаба';
-*/
 
 			break;
 		default://Custom language
@@ -167,10 +155,8 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 	guiParams.axesHelperFolder = guiParams.axesHelperFolder || lang.axesHelper;
 	const cookieName = guiParams.cookieName || guiParams.axesHelperFolder,
-		cookie = guiParams.cookie || new Cookie.defaultCookie(),
-		optionsGroupMove = options.groupMove;
+		cookie = guiParams.cookie || new Cookie.defaultCookie();
 	cookie.getObject( cookieName, options, options );
-	options.groupMove = optionsGroupMove;
 
 	function setSettings() { cookie.setObject( cookieName, options ); }
 
@@ -193,13 +179,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 			} );
 
 		} );
-/*			
-		Object.keys( axesGroups ).forEach( function ( key ) {
-
-			axesGroups[key].visible = value;
-
-		} );
-*/			
 		displayControllers();
 		setSettings();
 			
@@ -238,43 +217,52 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 	const fSpriteText = typeof SpriteTextGui === "undefined" ? undefined : SpriteTextGui( SpriteText, gui, groupAxesHelper, {
 
 		getLanguageCode: guiParams.getLanguageCode,
-		//settings: { zoomMultiplier: 1.5, },
 		cookie: cookie,
 		cookieName: 'SpriteText_' + cookieName,
 		parentFolder: fScales,
-//			options: groupAxesHelper.userData.optionsSpriteText,
 
 	} );
+
+	//Axes intersection folder
+
+	const fAxesIntersection = fAxesHelper.addFolder( lang.axesIntersection ),
+		axesIntersectionControllers = { x: {}, y: {}, z: {} };//, w: {} };//, t: {}, };
+	function axesIntersection( axisName ) {
+
+
+
+		const scale = options.scales[axisName];
+		if ( scale === undefined )
+			return;
+
+		const scaleControllers = axesIntersectionControllers[axisName];
+
+		scaleControllers.controller = fAxesIntersection.add( {
+
+			value: options.posAxesIntersection[axisName],
+
+		}, 'value',
+			scale.min,
+			scale.max,
+			( scale.max - scale.min ) / 100 ).
+			onChange( function ( value ) {
+
+				options.posAxesIntersection[axisName] = value;
+console.warn( scale.name + ' ' + options.posAxesIntersection[axisName] );
+
+			} );
+		dat.controllerNameAndTitle( scaleControllers.controller, scale.name );
+
+	}
+	axesIntersection( 'x' );
+	axesIntersection( 'y' );
+	axesIntersection( 'z' );
 
 	fAxesHelper.add( new ScaleController(
 		function ( customController, action ) {
 
 			function zoom( zoom, action ) {
 
-/*
-				var axesHelper = guiParams.axesHelper;
-
-				function axesZoom( axes, scaleControllers, windowRange ) {
-
-					if ( axes === undefined )
-						return;//not 3D axesHelper
-
-					axes.min = action( axes.min, zoom );
-					scaleControllers.min.setValue( axes.min );
-
-					axes.max = action( axes.max, zoom );
-					scaleControllers.max.setValue( axes.max );
-					scaleControllers.onchangeWindowRange();// windowRange, axes );
-
-				}
-
-				axesZoom( options.scales.x, scalesControllers.x, axesHelper === undefined ? undefined : axesHelper.windowRangeX );
-				axesZoom( options.scales.y, scalesControllers.y, axesHelper === undefined ? undefined : axesHelper.windowRangeY );
-				axesZoom( options.scales.z, scalesControllers.z, axesHelper === undefined ? undefined : axesHelper.windowRangeZ );
-
-				if ( axesHelper !== undefined )
-					axesHelper.updateDotLines();
-*/
 				function axesZoom( axes, scaleControllers ) {
 
 					if ( axes === undefined )
@@ -307,7 +295,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 	} );
 
-	function scale( axisName/*, axes, windowRange, scaleControllers, axesDefault*/ ) {
+	function scale( axisName ) {
 
 		const axes = options.scales[axisName];
 		if ( axes === undefined )
@@ -351,10 +339,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 			scaleControllers.max.setValue( axes.max );
 
 			onchangeWindowRange( windowRange, axes );
-/*
-			if ( guiParams.axesHelper !== undefined )
-				guiParams.axesHelper.updateDotLines();
-*/
 
 		}
 
@@ -372,7 +356,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 			onclick( positionController, function ( value, zoom ) {
 
-				value += shift;//zoom;
+				value += shift;
 				return value;
 
 			} );
@@ -406,7 +390,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 			scaleControllers.marks = dat.controllerZeroStep( scaleControllers.folder, axes, 'marks', function ( value ) {
 
-//					windowRange();
 				onchangeWindowRange( windowRange );
 
 			} );
@@ -440,10 +423,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 				}
 
 				onchangeWindowRange( windowRange, axes );
-/*
-				if ( guiParams.axesHelper !== undefined )
-					guiParams.axesHelper.updateDotLines();
-*/
 
 			},
 
@@ -454,7 +433,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 	const scalesControllers = { x: {}, y: {}, z: {} };//, w: {} };//, t: {}, };
 	function windowRange() {
 
-//			cookie.setObject( cookieName, options.scales );
 		setSettings();
 
 	}
