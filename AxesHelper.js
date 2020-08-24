@@ -53,9 +53,9 @@ export function AxesHelper( THREE, group, options ) {
 
 	//Этот вызов нужен на случай, когда в приложении import из guiSelectPoint.js происходит из разных файлов. Например
 	//В одном месте
-	//import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint.js';
+	//import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/commonNodeJS/master/guiSelectPoint/guiSelectPoint.js';
 	//а в другом месте
-	//import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint.js';
+	//import { GuiSelectPoint, getObjectPosition } from '../../../commonNodeJS/master/guiSelectPoint/guiSelectPoint.js';
 	//Тогда в приложении будет два экземпляра guiSelectPoint.js
 	//Для обоих экземпляров guiSelectPoint.js надо установить отдельный THREE
 	GuiSelectPoint.setTHREE( THREE );
