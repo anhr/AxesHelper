@@ -174,7 +174,7 @@ export function AxesHelper( THREE, group, options ) {
 
 			),
 		] ), new THREE.LineBasicMaterial( { color: color, opacity: opacity, transparent: true, } ) );
-		//moving of the axes intersection to the center of the canvas ( to the camera focus )
+		//moving of the axes intersection to the center of the canvas ( to the camera focus ) munus posAxesIntersection
 		if ( axisName !== 'x' ) lineAxis.position.x = - options.posAxesIntersection.x;
 		if ( axisName !== 'y' ) lineAxis.position.y = - options.posAxesIntersection.y;
 		if ( axisName !== 'z' ) lineAxis.position.z = - options.posAxesIntersection.z;

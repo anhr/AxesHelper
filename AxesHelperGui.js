@@ -108,6 +108,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 		defaultButton: 'Default',
 		defaultTitle: 'Restore default Axes Helper settings.',
+		defaultAxesIntersectionTitle: 'Restore default axes intersection.',
 
 	};
 
@@ -137,6 +138,7 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 
 			lang.defaultButton = 'Восстановить';
 			lang.defaultTitle = 'Восстановить настройки осей координат по умолчанию.';
+			lang.defaultAxesIntersectionTitle = 'Восстановить начало координат по умолчанию.';
 
 			break;
 		default://Custom language
@@ -229,8 +231,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 		axesIntersectionControllers = { x: {}, y: {}, z: {} };//, w: {} };//, t: {}, };
 	function axesIntersection( axisName ) {
 
-
-
 		const scale = options.scales[axisName];
 		if ( scale === undefined )
 			return;
@@ -248,7 +248,13 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 			onChange( function ( value ) {
 
 				options.posAxesIntersection[axisName] = value;
-console.warn( scale.name + ' ' + options.posAxesIntersection[axisName] );
+/*				
+				if ( axisName !== 'x' ) scalesControllers.x.updateAxis();
+				if ( axisName !== 'y' ) scalesControllers.y.updateAxis();
+				if ( axisName !== 'z' ) scalesControllers.z.updateAxis();
+*/				
+				axesHelper.updateAxes();
+				setSettings();
 
 			} );
 		dat.controllerNameAndTitle( scaleControllers.controller, scale.name );
@@ -257,6 +263,26 @@ console.warn( scale.name + ' ' + options.posAxesIntersection[axisName] );
 	axesIntersection( 'x' );
 	axesIntersection( 'y' );
 	axesIntersection( 'z' );
+	//default button Axes intersection 
+	var defaultParams = {
+
+		defaultF: function ( value ) {
+
+			axesIntersectionControllers.x.controller.setValue( optionsDefault.posAxesIntersection.x );
+			axesIntersectionControllers.y.controller.setValue( optionsDefault.posAxesIntersection.y );
+			axesIntersectionControllers.z.controller.setValue( optionsDefault.posAxesIntersection.z );
+/*			
+			options.posAxesIntersection = JSON.parse( JSON.stringify( optionsDefault.posAxesIntersection ) ),
+			scalesControllers.x.updateAxis();
+			scalesControllers.y.updateAxis();
+			scalesControllers.z.updateAxis();
+			setSettings();
+*/			
+
+		},
+
+	};
+	dat.controllerNameAndTitle( fAxesIntersection.add( defaultParams, 'defaultF' ), lang.defaultButton, lang.defaultAxesIntersectionTitle );
 
 	fAxesHelper.add( new ScaleController(
 		function ( customController, action ) {
@@ -440,7 +466,6 @@ console.warn( scale.name + ' ' + options.posAxesIntersection[axisName] );
 	scale('y');
 	scale('z');
 //	scale('w');
-
 
 	//default button
 	var defaultParams = {
