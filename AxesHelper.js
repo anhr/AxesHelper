@@ -27,7 +27,7 @@ import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/
  * @param {THREE} THREE {@link https://github.com/anhr/three.js|THREE}
  * @param {THREE.Group|THREE.Scene} group THREE group or scene
  * @param {object} [options] followed options is available
- * @param {object} [options.color] axes color. Available color names see var _colorKeywords in the threejs. Default is 'white'.
+ * @param {object} [options.color] axes color. Available color names see THREE.Color.NAMES. Default is 'white'.
  * @param {number} [options.scales] axes scales. Default is {}
  * @param {THREE.Vector3} [options.posAxesIntersection] Position of the axes intersection.
  *
