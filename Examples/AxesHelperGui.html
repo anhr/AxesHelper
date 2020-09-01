@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -33,19 +33,22 @@
 
 	<script type="module">
 
-		import * as THREE from '../../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js
-		//import * as THREE from 'https://threejs.org/build/three.module.js';
+		//import * as THREE from '../../../three.js/dev/build/three.module.js';//https://github.com/anhr/three.js
+		//import * as THREE from 'https://raw.githack.com/anhr/three.js/dev/build/three.module.js';//https://github.com/anhr/three.js
+		import * as THREE from 'https://threejs.org/build/three.module.js';
 		//import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
-		import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
-		//import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
+		//import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
+		import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
 
-		import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
-		//import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
+		//import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
+		import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
 		
+		//import { OrbitControls } from 'http://localhost/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
 		//import { OrbitControls } from '../../../three.js/dev/examples/jsm/controls/OrbitControls.js';//https://github.com/anhr/three.js
-		import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
+		//import { OrbitControls } from 'https://raw.githack.com/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
+		import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
 
 		//import { dat } from '../../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 		import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
@@ -73,7 +76,7 @@
 		import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
 
 		var camera, scene, renderer, stereoEffect, axesHelper, controls, intersects, guiSelectPoint, moveGroup, raycaster;
-		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.08;//0.02;
+		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;//0.08;
 
 		init();
 		animate();
@@ -310,7 +313,7 @@
 				new THREE.PointsMaterial( {
 
 					color: 0xffffff,
-					size: 0.5,//0.05,
+					size: 0.2,//0.05,
 					//sizeAttenuation: true,
 					alphaTest: 0.5,
 
@@ -454,43 +457,6 @@
 					renderer: renderer,
 					camera: camera,
 					stereoEffect: stereoEffect,
-/*					
-					onIntersection: function ( intersects, mouse ) {
-
-//						points.userData.raycaster.onIntersection( intersects[0] );
-						var intersection = intersects[0];
-						if (
-							( intersection.object.userData.raycaster !== undefined )
-							&& ( intersection.object.userData.raycaster.onIntersection !== undefined ) ) {
-
-							intersection.object.userData.raycaster.onIntersection( intersection );
-
-						}
-
-					},
-*/					
-//					onIntersectionOut: function ( intersects ) { points.userData.raycaster.onIntersectionOut() },
-/*
-					onMouseDown: function ( intersects ) {
-
-						var intersection = intersects[0];
-						if (
-							( intersection.object.userData.raycaster !== undefined )
-							&& ( intersection.object.userData.raycaster.onMouseDown !== undefined ) ) {
-
-//							intersection.object.userData.raycaster.onMouseDown( raycaster, intersection, scene );
-							intersection.object.userData.raycaster.onMouseDown( intersection );
-
-						}
-						if ( ( intersection.object.userData.isInfo !== undefined ) && !intersection.object.userData.isInfo() )
-							return;//No display information about frustum point
-						guiSelectPoint.select( intersection );
-						if ( ( intersection.object.type === "Points" ) && ( axesHelper !== undefined ) )
-							axesHelper.exposePosition( intersection );
-						//							axesHelper.exposePosition( getPosition( intersection ) );
-
-					}
-*/
 
 				} );
 				raycaster.stereo.addParticle( points );
@@ -633,7 +599,12 @@
 			} );
 
 		}, false );
-		window.addEventListener( 'mousedown', function( event ) {
+
+		//ATTENTION!!! The 'mousedown' event is not fired you use new version of the OrbitControls.
+		//See "OrbitControls: Implement Pointer events." commit https://github.com/mrdoob/three.js/commit/1422e36e9facbdc5f9d86cf6b97b005a2723a24a#diff-3285de3826a51619836a5c9adc6bee74
+		//window.addEventListener( 'mousedown', function( event )
+
+		window.addEventListener( 'pointerdown', function( event ) {
 
 			if ( raycaster === undefined )
 				return;

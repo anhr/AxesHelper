@@ -1,7 +1,7 @@
 /**
  * @module AxesHelper
  * @description An axis object to visualize the 1, 2 or 3 axes.
- * @author {@link https://anhr.github.io/AboutMe/|Andrej Hristoliubov}
+ * @author [Andrej Hristoliubov]{@link https://anhr.github.io/AboutMe/}
  *
  * @copyright 2011 Data Arts Team, Google Creative Lab
  *
@@ -28,8 +28,8 @@ import { GuiSelectPoint, getObjectPosition } from 'https://raw.githack.com/anhr/
  * @param {THREE.Group|THREE.Scene} group THREE group or scene
  * @param {object} [options] followed options is available
  * @param {object} [options.color] axes color. Available color names see THREE.Color.NAMES. Default is 'white'.
- * @param {number} [options.scales] axes scales. Default is {}
  * @param {THREE.Vector3} [options.posAxesIntersection] Position of the axes intersection.
+ * @param {object} [options.scales] axes scales. Default is {}
  *
  * @param {number} [options.scales.axisName] x or y or z
  * @param {number} [options.scales.axisName.zoomMultiplier] zoom multiplier. Default is 1.1
