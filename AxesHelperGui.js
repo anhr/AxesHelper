@@ -43,6 +43,7 @@ import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.mo
  * @param {GUI} gui is [new dat.GUI(...)]{@link https://github.com/anhr/dat.gui}.
  * @param {object} [guiParams] Followed parameters is allowed. Default is no parameters.
  * @param {Function} [guiParams.getLanguageCode] Your custom getLanguageCode() function.
+ * <pre>
  * returns the "primary language" subtag of the language version of the browser.
  * Examples: "en" - English language, "ru" Russian.
  * See the "Syntax" paragraph of RFC 4646 {@link https://tools.ietf.org/html/rfc4646#section-2.1|rfc4646 2.1 Syntax} for details.
@@ -53,6 +54,7 @@ import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.mo
  * @param {cookie} [guiParams.cookie] Your custom cookie function for saving and loading of the AxesHelper settings.
  * See [cookieNodeJS]{@link https://github.com/anhr/cookieNodeJS}.
  * Default cookie is not saving settings.
+ * </pre>
  * @param {string} [guiParams.cookieName] Name of the cookie is "AxesHelper" + guiParams.cookieName. Default is undefined.
  * @example
 AxesHelperGui( axesHelper, gui, {
