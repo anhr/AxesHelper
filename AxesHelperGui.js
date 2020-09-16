@@ -20,8 +20,9 @@ import ScaleController from 'https://raw.githack.com/anhr/commonNodeJS/master/Sc
 //import PositionController from '../../commonNodeJS/master/PositionController.js';//https://github.com/anhr/commonNodeJS
 import PositionController from 'https://raw.githack.com/anhr/commonNodeJS/master/PositionController.js';
 
-//import Cookie from '../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
-import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+import Cookie from '../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/cookieNodeJS
+//import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+//import Cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 
 //import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
 import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
