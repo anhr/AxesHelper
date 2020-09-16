@@ -1,6 +1,6 @@
 # AxesHelper.
 
-An axis object to visualize the 1, 2 or 3 axes.
+An axis object to visualize the 1, 2 or 3 axes. I use AxesHelper in my [three.js](https://threejs.org/) projects.
 
 ## Quick start
 
@@ -368,11 +368,11 @@ cookie: cookie,
 ```
 line in the SpriteTextGui.gui(...) above and import cookie.
 ```
-import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+import cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 ```
-or download [cookieNodeJS](https://github.com/anhr/cookieNodeJS) repository into your "[folderName]\cookieNodeJS\master" folder.
+or download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
 ```
-import cookie from './cookieNodeJS/master/cookie.js';
+import cookie from './commonNodeJS/master/cookieNodeJS/cookie.js';
 ```
 
 Add [guiSelectPoint](../../../commonNodeJS/master/guiSelectPoint/jsdoc/index.html) into [dat.gui](https://github.com/anhr/dat.gui) for select a point from the mesh.

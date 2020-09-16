@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -39,11 +39,11 @@
 		//import { THREE } from '../../../commonNodeJS/master/three.js';//https://github.com/anhr/commonNodeJS
 		//import { THREE } from 'https://raw.githack.com/anhr/commonNodeJS/master/three.js';
 
-		//import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
-		import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
+		import { AxesHelper } from '../AxesHelper.js';//https://github.com/anhr/AxesHelper
+		//import { AxesHelper } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelper.js';
 
-		//import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
-		import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
+		import { AxesHelperGui } from '../AxesHelperGui.js';//https://github.com/anhr/AxesHelper
+		//import { AxesHelperGui } from 'https://raw.githack.com/anhr/AxesHelper/master/AxesHelperGui.js';
 		
 		//import { OrbitControls } from 'http://localhost/anhr/three.js/dev/examples/jsm/controls/OrbitControls.js';
 		//import { OrbitControls } from '../../../three.js/dev/examples/jsm/controls/OrbitControls.js';//https://github.com/anhr/three.js
@@ -53,8 +53,9 @@
 		//import { dat } from '../../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 		import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
-		//import cookie from '../../../cookieNodeJS/master/cookie.js';//https://github.com/anhr/cookieNodeJS
-		import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+		import cookie from '../../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/cookieNodeJS
+		//import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
+		//import cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 
 		//import { getLanguageCode } from '../../../commonNodeJS/master/lang.js';//https://github.com/anhr/commonNodeJS
 		import { getLanguageCode } from 'https://raw.githack.com/anhr/commonNodeJS/master/lang.js';
@@ -328,12 +329,6 @@
 
 					onIntersection: function ( intersection ) {
 
-/*
-						if ( !this.bIntersectionOut )
-							return;
-						this.bIntersectionOut = false;
-*/
-
 						if ( typeof SpriteText !== 'undefined' ) {
 
 							const position = getIntersectionPosition( intersection );
@@ -378,18 +373,10 @@
 					},
 					onIntersectionOut: function () {
 
-/*
-						if ( this.bIntersectionOut )
-							return;
-						this.bIntersectionOut = true;
-*/
-						//console.warn( 'onIntersectionOut' );
-						//					options.removeSpriteTextIntersection( scene );
 						scene.remove( this.spriteText );
 						renderer.domElement.style.cursor = cursor;
 
 					},
-//					bIntersectionOut: true,
 					onMouseDown: function ( intersect ) {
 
 						if ( axesHelper )
