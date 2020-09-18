@@ -120,19 +120,19 @@ scene.add( points );
 ```
 Import [StereoEffect](https://github.com/anhr/commonNodeJS/blob/master/StereoEffect/README.md).
 ```
-import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+import StereoEffect from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
 ```
 or 
 download [commonNodeJS](https://github.com/anhr/commonNodeJS) repository into your "[folderName]\commonNodeJS\master" folder.
 ```
-import { StereoEffect, spatialMultiplexsIndexs } from './commonNodeJS/master/StereoEffect/StereoEffect.js';
+import StereoEffect from './commonNodeJS/master/StereoEffect/StereoEffect.js';
 ```
 
 * Create the StereoEffect instance.
 ```
 const stereoEffect = new StereoEffect( THREE, renderer, {
 
-	//spatialMultiplex: spatialMultiplexsIndexs.SbS,//Side by side stereo effect
+	//spatialMultiplex: StereoEffect.spatialMultiplexsIndexs.SbS,//Side by side stereo effect
 	far: camera.far,
 	camera: camera,
 
