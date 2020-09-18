@@ -53,7 +53,7 @@
 		//import { dat } from '../../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
 		import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
-		import cookie from '../../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/cookieNodeJS
+		import cookie from '../../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/commonNodeJS/tree/master/cookieNodeJS
 		//import cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 		//import cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 
@@ -72,10 +72,13 @@
 
 		//import { MoveGroup } from '../../../commonNodeJS/master/MoveGroup.js';//https://github.com/anhr/commonNodeJS
 		import { MoveGroup } from 'https://raw.githack.com/anhr/commonNodeJS/master/MoveGroup.js';
-
-		//import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
-		import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
-
+/*
+		import { StereoEffect, spatialMultiplexsIndexs } from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
+		//import { StereoEffect, spatialMultiplexsIndexs } from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+*/		
+		import StereoEffect from '../../../commonNodeJS/master/StereoEffect/StereoEffect.js';//https://github.com/anhr/commonNodeJS
+		//import StereoEffect from 'https://raw.githack.com/anhr/commonNodeJS/master/StereoEffect/StereoEffect.js';
+		
 		var camera, scene, renderer, stereoEffect, axesHelper, controls, intersects, guiSelectPoint, moveGroup, raycaster;
 		const mouse = new THREE.Vector2(), arrayintersectObjects = [], threshold = 0.02;//0.08;
 
@@ -424,7 +427,7 @@
 
 				stereoEffect = new StereoEffect( THREE, renderer, {
 
-					//spatialMultiplex: spatialMultiplexsIndexs.Mono,
+					//spatialMultiplex: StereoEffect.spatialMultiplexsIndexs.SbS,
 					far: camera.far,
 					camera: camera,
 					cookie: cookie,
