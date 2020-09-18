@@ -14,24 +14,24 @@
  * http://www.apache.org/licenses/LICENSE-2.0
 */
 
-//import ScaleController from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
-import ScaleController from 'https://raw.githack.com/anhr/commonNodeJS/master/ScaleController.js';
+import ScaleController from '../../commonNodeJS/master/ScaleController.js';//https://github.com/anhr/commonNodeJS
+//import ScaleController from 'https://raw.githack.com/anhr/commonNodeJS/master/ScaleController.js';
 
-//import PositionController from '../../commonNodeJS/master/PositionController.js';//https://github.com/anhr/commonNodeJS
-import PositionController from 'https://raw.githack.com/anhr/commonNodeJS/master/PositionController.js';
+import PositionController from '../../commonNodeJS/master/PositionController.js';//https://github.com/anhr/commonNodeJS
+//import PositionController from 'https://raw.githack.com/anhr/commonNodeJS/master/PositionController.js';
 
-import Cookie from '../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/cookieNodeJS
+import Cookie from '../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://github.com/anhr/commonNodeJS/tree/master/cookieNodeJS
 //import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 //import Cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 
-//import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
-import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
+import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+//import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
-//import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
-import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
+import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
+//import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
-//import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
-import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
+import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
+//import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.module.js';
 
 //import clearThree from '../../commonNodeJS/master/clearThree.js';//https://github.com/anhr/commonNodeJS
 //import clearThree from 'https://raw.githack.com/anhr/commonNodeJS/master/clearThree.js';
@@ -53,7 +53,7 @@ import { dat } from 'https://raw.githack.com/anhr/commonNodeJS/master/dat/dat.mo
  * @param {object} [guiParams.lang] Object with localized language values
  * @param {string} [guiParams.axesHelperFolder] AxesHelper folder name. Default is lang.axesHelper
  * @param {cookie} [guiParams.cookie] Your custom cookie function for saving and loading of the AxesHelper settings.
- * See [cookieNodeJS]{@link https://github.com/anhr/cookieNodeJS}.
+ * See [cookieNodeJS]{@link https://github.com/anhr/commonNodeJS/tree/master/cookieNodeJS}.
  * Default cookie is not saving settings.
  * </pre>
  * @param {string} [guiParams.cookieName] Name of the cookie is "AxesHelper" + guiParams.cookieName. Default is undefined.
