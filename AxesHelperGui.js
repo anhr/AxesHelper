@@ -50,13 +50,15 @@ import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://gith
  * See the "Syntax" paragraph of RFC 4646 {@link https://tools.ietf.org/html/rfc4646#section-2.1|rfc4646 2.1 Syntax} for details.
  * Default returns the 'en' is English language.
  * You can import { getLanguageCode } from '../../commonNodeJS/master/lang.js';
+ * </pre>
  * @param {object} [guiParams.lang] Object with localized language values
- * @param {string} [guiParams.axesHelperFolder] AxesHelper folder name. Default is lang.axesHelper
+ * @param {string} [guiParams.axesHelperFolder=lang.axesHelper] AxesHelper folder name.
  * @param {cookie} [guiParams.cookie] Your custom cookie function for saving and loading of the AxesHelper settings.
+ * <pre>
  * See [cookieNodeJS]{@link https://github.com/anhr/commonNodeJS/tree/master/cookieNodeJS}.
  * Default cookie is not saving settings.
  * </pre>
- * @param {string} [guiParams.cookieName] Name of the cookie is "AxesHelper" + guiParams.cookieName. Default is undefined.
+ * @param {string} [guiParams.cookieName] Name of the cookie is "AxesHelper" + guiParams.cookieName.
  * @example
 AxesHelperGui( axesHelper, gui, {
 
@@ -505,8 +507,8 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 	}
 	displayControllers();
 	
-	scalesControllers.x.updateAxis();
-	scalesControllers.y.updateAxis();
-	scalesControllers.z.updateAxis();
+	if ( scalesControllers.x.updateAxis ) scalesControllers.x.updateAxis();
+	if ( scalesControllers.y.updateAxis ) scalesControllers.y.updateAxis();
+	if ( scalesControllers.z.updateAxis ) scalesControllers.z.updateAxis();
 
 }
