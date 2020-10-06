@@ -26,7 +26,7 @@ import { GuiSelectPoint, getObjectPosition } from '../../commonNodeJS/master/gui
  * An axis object to visualize the 1, 2 or 3 axes.
  * @param {THREE} THREE {@link https://github.com/anhr/three.js|THREE}
  * @param {THREE.Group|THREE.Scene} group THREE group or scene
- * @param {object} [options] followed options is available
+ * @param {object} [options] the following options are available
  * @param {object} [options.color] axes color. Available color names see THREE.Color.NAMES. Default is 'white'.
  * @param {THREE.Vector3} [options.posAxesIntersection] Position of the axes intersection.
  * @param {object} [options.scales] axes scales. Default is {}
