@@ -1,3 +1,5 @@
+Attention!!! This repository is deprecated! Plase go to [commonNodeJS/AxesHelper](https://github.com/anhr/commonNodeJS/tree/master/AxesHelper)
+
 # AxesHelper.
 
 An axis object to visualize the 1, 2 or 3 axes.
