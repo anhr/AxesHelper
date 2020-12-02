@@ -188,7 +188,6 @@ export function AxesHelperGui( axesHelper, gui, guiParams ) {
 		} );
 		displayControllers();
 		setSettings();
-			
 
 	} );
 	dat.controllerNameAndTitle( controllerDisplayScales, lang.displayScales, lang.displayScalesTitle );
