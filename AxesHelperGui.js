@@ -24,10 +24,10 @@ import Cookie from '../../commonNodeJS/master/cookieNodeJS/cookie.js';//https://
 //import Cookie from 'https://raw.githack.com/anhr/cookieNodeJS/master/cookie.js';
 //import Cookie from 'https://raw.githack.com/anhr/commonNodeJS/master/cookieNodeJS/cookie.js';
 
-import { SpriteText } from '../../SpriteText/master/SpriteText.js';//https://github.com/anhr/SpriteText
+import { SpriteText } from '../../commonNodeJS/master/SpriteText/SpriteText.js';//https://github.com/anhr/SpriteText
 //import { SpriteText } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteText.js';
 
-import { SpriteTextGui } from '../../SpriteText/master/SpriteTextGui.js';//https://github.com/anhr/SpriteText
+import { SpriteTextGui } from '../../commonNodeJS/master/SpriteText/SpriteTextGui.js';//https://github.com/anhr/SpriteText
 //import { SpriteTextGui } from 'https://raw.githack.com/anhr/SpriteText/master/SpriteTextGui.js';
 
 import { dat } from '../../commonNodeJS/master/dat/dat.module.js';//https://github.com/anhr/commonNodeJS
